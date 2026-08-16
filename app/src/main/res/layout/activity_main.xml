@@ -5,41 +5,110 @@
     android:layout_height="match_parent"
     android:padding="24dp">
 
-    <TextView
-        android:id="@+id/titleText"
-        android:layout_width="wrap_content"
+    <!-- Connect screen -->
+    <LinearLayout
+        android:id="@+id/connectLayout"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="בדיקת סריקת ברקוד"
-        android:textSize="22sp"
-        android:textStyle="bold"
+        android:orientation="vertical"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="32dp" />
+        android:layout_marginTop="32dp">
 
-    <Button
-        android:id="@+id/scanButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="סרוק ברקוד"
-        android:textSize="18sp"
-        android:paddingHorizontal="32dp"
-        android:paddingVertical="16dp"
-        app:layout_constraintTop_toBottomOf="@id/titleText"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="48dp" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="התחברות ל-Supabase"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:layout_gravity="center" />
 
-    <TextView
-        android:id="@+id/resultText"
+        <EditText
+            android:id="@+id/supaUrlInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:hint="Project URL (https://xxxx.supabase.co)"
+            android:inputType="textUri"
+            android:autofillHints="" />
+
+        <EditText
+            android:id="@+id/supaKeyInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:hint="Anon (public) API key"
+            android:inputType="textPassword"
+            android:autofillHints="" />
+
+        <Button
+            android:id="@+id/connectButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_gravity="center"
+            android:text="התחבר" />
+
+        <TextView
+            android:id="@+id/connectStatusText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:textColor="#CC0000"
+            android:gravity="center" />
+
+    </LinearLayout>
+
+    <!-- Main / scan screen -->
+    <LinearLayout
+        android:id="@+id/mainLayout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="התוצאה תופיע כאן"
-        android:textSize="18sp"
-        android:gravity="center"
-        app:layout_constraintTop_toBottomOf="@id/scanButton"
+        android:orientation="vertical"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="40dp" />
+        android:layout_marginTop="32dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="סריקת ברקוד לטבלת test"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:layout_gravity="center" />
+
+        <Button
+            android:id="@+id/scanButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="40dp"
+            android:paddingHorizontal="32dp"
+            android:paddingVertical="16dp"
+            android:textSize="18sp"
+            android:text="סרוק ברקוד" />
+
+        <TextView
+            android:id="@+id/resultText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:text="התוצאה תופיע כאן"
+            android:textSize="16sp"
+            android:gravity="center" />
+
+        <Button
+            android:id="@+id/changeConnectionButton"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="40dp"
+            android:text="שינוי חיבור" />
+
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
