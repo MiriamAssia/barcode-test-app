@@ -1,0 +1,3 @@
+<resources>
+    <style name="Theme.BarcodeTest" parent="Theme.MaterialComponents.DayNight.NoActionBar" />
+</resources>

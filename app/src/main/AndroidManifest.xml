@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-feature android:name="android.hardware.camera" android:required="false" />
+    <uses-feature android:name="android.hardware.camera.autofocus" android:required="false" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@android:drawable/ic_menu_camera"
+        android:label="@string/app_name"
+        android:theme="@style/Theme.BarcodeTest"
+        android:supportsRtl="true">
+
+        <activity
+            android:name="com.miriam.barcodetest.MainActivity"
+            android:exported="true"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name="com.journeyapps.barcodescanner.CaptureActivity"
+            android:screenOrientation="fullSensor"
+            tools:replace="screenOrientation"
+            xmlns:tools="http://schemas.android.com/tools" />
+
+    </application>
+
+</manifest>
