@@ -118,13 +118,3 @@ data class ExpiringBatch(
     @SerialName("expiry_date") val expiryDate: String? = null,
     @SerialName("days_until_expiry") val daysUntilExpiry: Int? = null
 )
-
-// ---------- פרמטרים לקריאת RPC ----------
-
-/** מתאים לפרמטרים של checkout_item(p_item_id, p_quantity, p_reason) ב-schema.sql */
-@Serializable
-data class CheckoutParams(
-    @SerialName("p_item_id") val itemId: String,
-    @SerialName("p_quantity") val quantity: Double,
-    @SerialName("p_reason") val reason: String
-)

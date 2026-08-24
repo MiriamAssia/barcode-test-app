@@ -3,10 +3,11 @@ package com.miriam.barcodetest.data.repository
 import com.miriam.barcodetest.data.Resource
 import com.miriam.barcodetest.data.SupabaseClientProvider
 import com.miriam.barcodetest.data.mapErrorToHebrewMessage
-import com.miriam.barcodetest.data.model.CheckoutParams
 import com.miriam.barcodetest.data.model.InventoryTransaction
 import com.miriam.barcodetest.data.model.NewTransaction
 import io.github.jan.supabase.postgrest.postgrest
+import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.put
 
 class TransactionsRepository {
 
@@ -16,10 +17,18 @@ class TransactionsRepository {
      * הוצאת מלאי מהירה (מסך שלב 3) - קוראת לפונקציית ה-DB checkout_item, שבוחרת
      * אוטומטית אצווה לפי FEFO ורושמת את התנועה בעצמה. זו הדרך היחידה שבה צוות
      * קליני מוציא מלאי - RLS לא מאפשר להם להוסיף ל-transactions ישירות (שלב 1).
+     *
+     * שמות הפרמטרים חייבים להתאים בדיוק לחתימה ב-schema.sql:
+     * checkout_item(p_item_id, p_quantity, p_reason)
      */
     suspend fun checkoutItem(itemId: String, quantity: Double, reason: String = "טיפול"): Resource<Unit> {
         return try {
-            postgrest.rpc("checkout_item", CheckoutParams(itemId, quantity, reason))
+            val params = buildJsonObject {
+                put("p_item_id", itemId)
+                put("p_quantity", quantity)
+                put("p_reason", reason)
+            }
+            postgrest.rpc("checkout_item", params)
             Resource.Success(Unit)
         } catch (e: Exception) {
             val msg = e.message ?: ""
