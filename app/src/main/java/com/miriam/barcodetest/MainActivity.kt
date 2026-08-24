@@ -117,8 +117,15 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun onResponse(call: okhttp3.Call, response: okhttp3.Response) {
+                // חייבים לקרוא/לסגור את גוף התגובה כאן (thread הרקע של OkHttp),
+                // לפני שעוברים ל-UI thread - אחרת גוף התגובה כבר ייסגר.
+                val isSuccessful = response.isSuccessful
+                val code = response.code
+                val errorBody = if (!isSuccessful) response.body?.string() ?: "" else ""
+                response.close()
+
                 runOnUiThread {
-                    if (response.isSuccessful) {
+                    if (isSuccessful) {
                         supaUrl = url
                         supaKey = key
                         prefs.edit()
@@ -127,8 +134,7 @@ class MainActivity : AppCompatActivity() {
                             .apply()
                         showMainScreen()
                     } else {
-                        val body = response.body?.string() ?: ""
-                        binding.connectStatusText.text = "שגיאה (${response.code}): טבלה '$TABLE_NAME' לא נמצאה, או שגיאת הרשאה. $body"
+                        binding.connectStatusText.text = "שגיאה ($code): טבלה '$TABLE_NAME' לא נמצאה, או שגיאת הרשאה. $errorBody"
                     }
                     binding.connectButton.isEnabled = true
                     binding.connectButton.text = "התחבר"
@@ -182,12 +188,18 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun onResponse(call: okhttp3.Call, response: okhttp3.Response) {
+                // חייבים לקרוא/לסגור את גוף התגובה כאן (thread הרקע של OkHttp),
+                // לפני שעוברים ל-UI thread - אחרת גוף התגובה כבר ייסגר.
+                val isSuccessful = response.isSuccessful
+                val code = response.code
+                val errBody = if (!isSuccessful) response.body?.string() ?: "" else ""
+                response.close()
+
                 runOnUiThread {
-                    if (response.isSuccessful) {
+                    if (isSuccessful) {
                         binding.resultText.text = "נסרק: $scannedValue\n✓ נשמר בהצלחה בטבלה"
                     } else {
-                        val errBody = response.body?.string() ?: ""
-                        binding.resultText.text = "נסרק: $scannedValue\nשגיאה (${response.code}): $errBody"
+                        binding.resultText.text = "נסרק: $scannedValue\nשגיאה ($code): $errBody"
                     }
                 }
             }
