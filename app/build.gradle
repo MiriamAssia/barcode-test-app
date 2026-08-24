@@ -59,3 +59,14 @@ dependencies {
 
     coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.1.5'
 }
+
+// auth-kt מביא באופן טרנזיטיבי את androidx.browser (לטובת התחברות OAuth דרך
+// דפדפן) - פיצ'ר שאנחנו לא משתמשים בו בכלל (רק אימייל+סיסמה). הגרסה האחרונה
+// שלו דורשת compileSdk 36 ו-AGP 8.9.1+, מה שהיה מחייב שדרוג גדול ומסוכן של כל
+// שרשרת הכלים. במקום זה, "מצמידים" אותו לגרסה ישנה יותר שתואמת ל-compileSdk 34
+// הנוכחי - זה בטוח כי אנחנו לא נוגעים בקוד ה-OAuth שהיא משרתת.
+configurations.all {
+    resolutionStrategy {
+        force 'androidx.browser:browser:1.8.0'
+    }
+}
