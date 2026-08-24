@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+    id 'org.jetbrains.kotlin.plugin.serialization'
 }
 
 android {
@@ -13,6 +14,11 @@ android {
         targetSdk 34
         versionCode 1
         versionName "1.0"
+
+        // כתובת ומפתח Supabase - קבועים לכל האפליקציה, לא מוזנים ע"י המשתמש/ת יותר.
+        // מפתח ה-publishable/anon אינו סוד: הוא מוגן ע"י Row Level Security ב-DB (ראו שלב 1).
+        buildConfigField "String", "SUPABASE_URL", "\"https://loyctmalmwvvpalebmdq.supabase.co\""
+        buildConfigField "String", "SUPABASE_ANON_KEY", "\"sb_publishable_SruwtkX43HzGqqiMrxmKQw_uan8o5Ru\""
     }
 
     buildTypes {
@@ -24,6 +30,7 @@ android {
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
+        coreLibraryDesugaringEnabled true
     }
 
     kotlinOptions {
@@ -32,6 +39,7 @@ android {
 
     buildFeatures {
         viewBinding true
+        buildConfig true
     }
 }
 
@@ -40,5 +48,14 @@ dependencies {
     implementation 'com.google.android.material:material:1.11.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'com.journeyapps:zxing-android-embedded:4.3.0'
-    implementation 'com.squareup.okhttp3:okhttp:4.12.0'
+
+    // Supabase (Postgrest + Auth) מעל Ktor, בקוד אסינכרוני עם coroutines
+    implementation platform('io.github.jan-tennert.supabase:bom:3.7.0')
+    implementation 'io.github.jan-tennert.supabase:postgrest-kt'
+    implementation 'io.github.jan-tennert.supabase:auth-kt'
+    implementation 'io.ktor:ktor-client-android:3.5.2'
+    implementation 'org.jetbrains.kotlinx:kotlinx-serialization-json:1.11.0'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.11.0'
+
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.1.5'
 }
