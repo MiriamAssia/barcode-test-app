@@ -43,4 +43,24 @@ class ItemsRepository {
     } catch (e: Exception) {
         Resource.Error(mapErrorToHebrewMessage(e), e)
     }
+
+    /**
+     * חיפוש פריט לפי הברקוד שנסרק. מחזיר null אם אין פריט כזה - זה מצב תקין
+     * ולא שגיאה (אז מסך הקליטה מציע ליצור פריט חדש עם הברקוד הזה).
+     *
+     * העמודה barcode נוספה ב-supabase/migration_02_barcode.sql.
+     */
+    suspend fun findItemByBarcode(barcode: String): Resource<Item?> = try {
+        val matches = postgrest.from("items")
+            .select {
+                filter {
+                    eq("barcode", barcode)
+                    eq("is_active", true)
+                }
+            }
+            .decodeList<Item>()
+        Resource.Success(matches.firstOrNull())
+    } catch (e: Exception) {
+        Resource.Error(mapErrorToHebrewMessage(e), e)
+    }
 }

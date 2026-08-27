@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- גלגל שיניים: טבעת מרכזית + 8 שיניים (4 קבוצות מסובבות ב-45 מעלות) -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <group
+        android:pivotX="12"
+        android:pivotY="12"
+        android:rotation="0">
+        <path
+            android:fillColor="#FFFFFFFF"
+            android:pathData="M10.6,1.5h2.8v4.5h-2.8zM10.6,18h2.8v4.5h-2.8z" />
+    </group>
+    <group
+        android:pivotX="12"
+        android:pivotY="12"
+        android:rotation="45">
+        <path
+            android:fillColor="#FFFFFFFF"
+            android:pathData="M10.6,1.5h2.8v4.5h-2.8zM10.6,18h2.8v4.5h-2.8z" />
+    </group>
+    <group
+        android:pivotX="12"
+        android:pivotY="12"
+        android:rotation="90">
+        <path
+            android:fillColor="#FFFFFFFF"
+            android:pathData="M10.6,1.5h2.8v4.5h-2.8zM10.6,18h2.8v4.5h-2.8z" />
+    </group>
+    <group
+        android:pivotX="12"
+        android:pivotY="12"
+        android:rotation="135">
+        <path
+            android:fillColor="#FFFFFFFF"
+            android:pathData="M10.6,1.5h2.8v4.5h-2.8zM10.6,18h2.8v4.5h-2.8z" />
+    </group>
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:fillType="evenOdd"
+        android:pathData="M12,4.5a7.5,7.5 0 1,0 0.01,0zM12,9a3,3 0 1,1 -0.01,0z" />
+</vector>

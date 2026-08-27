@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    MedTrack Dark - פלטת הצבעים מתוך העיצוב (stitch / DESIGN.md).
+    האפליקציה היא dark-only בכוונה: היא מיועדת לשימוש בחדרי טיפול ובמחסן
+    בתאורה נמוכה, ולכן אין כאן ערכת נושא בהירה. -->
+<resources>
+
+    <!-- רקעים ומשטחים -->
+    <color name="md_background">#FF121212</color>
+    <color name="md_surface">#FF1E1E1E</color>
+    <color name="md_surface_container_lowest">#FF121212</color>
+    <color name="md_surface_container_low">#FF1E1E1E</color>
+    <color name="md_surface_container">#FF2C2C2C</color>
+    <color name="md_surface_container_high">#FF3D3D3D</color>
+    <color name="md_surface_container_highest">#FF4D4D4D</color>
+    <color name="md_surface_bright">#FF3D3D3D</color>
+    <color name="md_surface_variant">#FF2C2C2C</color>
+
+    <!-- טקסט וקווי מתאר -->
+    <color name="md_on_surface">#FFFFFFFF</color>
+    <color name="md_on_surface_variant">#FFA3A3A3</color>
+    <color name="md_outline">#FF525252</color>
+    <color name="md_outline_variant">#FF404040</color>
+
+    <!-- כחול ראשי - ניווט ופעולות אישור סופיות -->
+    <color name="md_primary">#FF3B82F6</color>
+    <color name="md_on_primary">#FFFFFFFF</color>
+    <color name="md_primary_container">#FF2563EB</color>
+    <color name="md_on_primary_container">#FFEFF6FF</color>
+
+    <!-- אפור משני -->
+    <color name="md_secondary">#FF6B7280</color>
+    <color name="md_on_secondary">#FFFFFFFF</color>
+    <color name="md_secondary_container">#FF4B5563</color>
+    <color name="md_on_secondary_container">#FFF9FAFB</color>
+
+    <!-- ירוק - סריקה, הצלחה, מצב "מוכן" -->
+    <color name="md_tertiary">#FF10B981</color>
+    <color name="md_on_tertiary">#FFFFFFFF</color>
+    <color name="md_tertiary_container">#FF059669</color>
+    <color name="md_on_tertiary_container">#FFECFDF5</color>
+
+    <!-- אדום - שגיאות -->
+    <color name="md_error">#FFEF4444</color>
+    <color name="md_on_error">#FFFFFFFF</color>
+    <color name="md_error_container">#FF991B1B</color>
+    <color name="md_on_error_container">#FFFEE2E2</color>
+
+</resources>

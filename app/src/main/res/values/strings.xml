@@ -1,3 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">בדיקת ברקוד</string>
+
+    <string name="app_name">ניהול מלאי מרפאה</string>
+
+    <!-- ניווט תחתון -->
+    <string name="nav_checkout">הוצאת מלאי</string>
+    <string name="nav_intake">קליטה</string>
+    <string name="nav_inventory">רשימת מלאי</string>
+    <string name="nav_alerts">התראות</string>
+    <string name="nav_reports">דוחות</string>
+
+    <!-- כללי -->
+    <string name="settings">הגדרות</string>
+    <string name="logout">התנתקות</string>
+    <string name="cancel">ביטול</string>
+    <string name="save">שמירה</string>
+    <string name="ok">אישור</string>
+    <string name="coming_soon">מסך זה ייבנה בשלב הבא</string>
+
+    <!-- מסך קליטת מלאי -->
+    <string name="intake_title">קליטת מלאי</string>
+    <string name="intake_subtitle">סרוק ברקוד או הזן פרטים ידנית לקליטת פריטים.</string>
+    <string name="intake_scan_action">סרוק פריט חדש</string>
+    <string name="intake_or">או</string>
+    <string name="intake_barcode_label">מספר פריט / מק\"ט</string>
+    <string name="intake_barcode_hint">הזן מק\"ט...</string>
+    <string name="intake_expiry_label">תאריך תפוגה</string>
+    <string name="intake_expiry_hint">בחר תאריך...</string>
+    <string name="intake_quantity_label">כמות לקליטה</string>
+    <string name="intake_batch_details">פרטי אצווה (רשות)</string>
+    <string name="intake_batch_number_label">מספר אצווה</string>
+    <string name="intake_batch_number_hint">הזן מספר אצווה...</string>
+    <string name="intake_supplier_label">ספק</string>
+    <string name="intake_supplier_hint">שם הספק...</string>
+    <string name="intake_submit">קלוט פריט למלאי</string>
+
+    <!-- הודעות מסך הקליטה -->
+    <string name="intake_scan_prompt">כוון/י את המצלמה לברקוד</string>
+    <string name="intake_search_first">יש לסרוק ברקוד או להזין מק\"ט</string>
+    <string name="intake_quantity_invalid">יש להזין כמות גדולה מאפס</string>
+    <string name="intake_item_not_found">פריט לא נמצא במערכת</string>
+    <string name="intake_create_item_question">הברקוד לא קיים במערכת. ליצור פריט חדש?</string>
+    <string name="intake_create_item">יצירת פריט חדש</string>
+    <string name="intake_searching">מחפש פריט...</string>
+    <string name="intake_saving">קולט למלאי...</string>
+
+    <!-- דיאלוג יצירת פריט חדש -->
+    <string name="new_item_title">פריט חדש</string>
+    <string name="new_item_barcode_label">ברקוד</string>
+    <string name="new_item_name_label">שם הפריט</string>
+    <string name="new_item_name_hint">לדוגמה: מזרק 10 מ\"ל</string>
+    <string name="new_item_category_label">קטגוריה</string>
+    <string name="new_item_category_hint">לדוגמה: חומרים מתכלים</string>
+    <string name="new_item_unit_label">יחידת מידה</string>
+    <string name="new_item_unit_hint">יחידה</string>
+    <string name="new_item_min_label">כמות מינימלית להתראה</string>
+    <string name="new_item_create">צור פריט</string>
+    <string name="new_item_name_required">יש להזין שם פריט</string>
+
+    <!-- תיאורי תוכן לנגישות -->
+    <string name="cd_scan">סריקת ברקוד</string>
+    <string name="cd_search">חיפוש</string>
+    <string name="cd_settings">הגדרות</string>
+    <string name="cd_calendar">בחירת תאריך</string>
+    <string name="cd_increase">הגדלת כמות</string>
+    <string name="cd_decrease">הקטנת כמות</string>
+    <string name="cd_expand">הרחבה</string>
+
 </resources>

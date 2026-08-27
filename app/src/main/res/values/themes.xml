@@ -1,3 +1,115 @@
-<resources>
-    <style name="Theme.BarcodeTest" parent="Theme.MaterialComponents.DayNight.NoActionBar" />
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <!--
+        ערכת נושא כהה בלבד (Material 3). העיצוב תוכנן dark-first, ולכן היא לא
+        עוקבת אחרי הגדרת המערכת - האפליקציה תמיד תיראה אותו דבר בכל מכשיר. -->
+    <style name="Theme.BarcodeTest" parent="Theme.Material3.Dark.NoActionBar">
+
+        <item name="colorPrimary">@color/md_primary</item>
+        <item name="colorOnPrimary">@color/md_on_primary</item>
+        <item name="colorPrimaryContainer">@color/md_primary_container</item>
+        <item name="colorOnPrimaryContainer">@color/md_on_primary_container</item>
+
+        <item name="colorSecondary">@color/md_secondary</item>
+        <item name="colorOnSecondary">@color/md_on_secondary</item>
+        <item name="colorSecondaryContainer">@color/md_secondary_container</item>
+        <item name="colorOnSecondaryContainer">@color/md_on_secondary_container</item>
+
+        <item name="colorTertiary">@color/md_tertiary</item>
+        <item name="colorOnTertiary">@color/md_on_tertiary</item>
+        <item name="colorTertiaryContainer">@color/md_tertiary_container</item>
+        <item name="colorOnTertiaryContainer">@color/md_on_tertiary_container</item>
+
+        <item name="colorError">@color/md_error</item>
+        <item name="colorOnError">@color/md_on_error</item>
+        <item name="colorErrorContainer">@color/md_error_container</item>
+        <item name="colorOnErrorContainer">@color/md_on_error_container</item>
+
+        <item name="android:colorBackground">@color/md_background</item>
+        <item name="colorOnBackground">@color/md_on_surface</item>
+        <item name="colorSurface">@color/md_surface</item>
+        <item name="colorOnSurface">@color/md_on_surface</item>
+        <item name="colorSurfaceVariant">@color/md_surface_variant</item>
+        <item name="colorOnSurfaceVariant">@color/md_on_surface_variant</item>
+        <item name="colorOutline">@color/md_outline</item>
+        <item name="colorOutlineVariant">@color/md_outline_variant</item>
+
+        <item name="android:statusBarColor">@color/md_surface</item>
+        <item name="android:navigationBarColor">@color/md_surface</item>
+        <item name="android:windowBackground">@color/md_background</item>
+    </style>
+
+    <!-- ===================== טיפוגרפיה ===================== -->
+
+    <style name="TextAppearance.MedTrack.HeadlineLarge" parent="TextAppearance.Material3.HeadlineLarge">
+        <item name="android:textSize">32sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/md_on_surface</item>
+    </style>
+
+    <style name="TextAppearance.MedTrack.HeadlineMedium" parent="TextAppearance.Material3.HeadlineMedium">
+        <item name="android:textSize">24sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/md_on_surface</item>
+    </style>
+
+    <style name="TextAppearance.MedTrack.BodyLarge" parent="TextAppearance.Material3.BodyLarge">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">@color/md_on_surface</item>
+    </style>
+
+    <style name="TextAppearance.MedTrack.BodyMedium" parent="TextAppearance.Material3.BodyMedium">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@color/md_on_surface</item>
+    </style>
+
+    <style name="TextAppearance.MedTrack.LabelLarge" parent="TextAppearance.Material3.LabelLarge">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@color/md_on_surface</item>
+    </style>
+
+    <style name="TextAppearance.MedTrack.LabelSmall" parent="TextAppearance.Material3.LabelSmall">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <!-- ===================== רכיבים חוזרים ===================== -->
+
+    <!-- תווית מעל שדה קלט -->
+    <style name="Widget.MedTrack.FieldLabel" parent="">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textAppearance">@style/TextAppearance.MedTrack.LabelLarge</item>
+        <item name="android:layout_marginBottom">8dp</item>
+    </style>
+
+    <!-- שדה טקסט בתוך מיכל מעוגל -->
+    <style name="Widget.MedTrack.EditText" parent="Widget.AppCompat.EditText">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:background">@null</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">@color/md_on_surface</item>
+        <item name="android:textColorHint">@color/md_on_surface_variant</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:paddingStart">12dp</item>
+        <item name="android:paddingEnd">12dp</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:inputType">text</item>
+    </style>
+
+    <!-- כפתור פעולה ראשי (כחול, מלא רוחב) -->
+    <style name="Widget.MedTrack.Button.Primary" parent="Widget.Material3.Button">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/md_touch_target_min</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:letterSpacing">0.03</item>
+        <item name="backgroundTint">@color/md_primary</item>
+        <item name="android:textColor">@color/md_on_primary</item>
+        <item name="cornerRadius">@dimen/md_radius_lg</item>
+    </style>
+
 </resources>

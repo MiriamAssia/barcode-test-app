@@ -16,7 +16,9 @@ data class Item(
     val category: String? = null,
     val unit: String = "יחידה",
     @SerialName("min_quantity") val minQuantity: Double = 0.0,
-    @SerialName("is_active") val isActive: Boolean = true
+    @SerialName("is_active") val isActive: Boolean = true,
+    /** הברקוד שעל האריזה (נוסף ב-migration_02_barcode.sql). null = לפריט אין ברקוד. */
+    val barcode: String? = null
 )
 
 /** להוספת פריט חדש - בלי id (ה-DB מייצר אותו). מנהל/ת בלבד (RLS). */
@@ -25,7 +27,8 @@ data class NewItem(
     val name: String,
     val category: String? = null,
     val unit: String = "יחידה",
-    @SerialName("min_quantity") val minQuantity: Double = 0.0
+    @SerialName("min_quantity") val minQuantity: Double = 0.0,
+    val barcode: String? = null
 )
 
 // ---------- batches ----------

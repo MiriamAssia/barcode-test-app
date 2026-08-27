@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    טופס יצירת פריט חדש - נפתח כשסורקים ברקוד שעדיין לא קיים במערכת,
+    כדי שאפשר יהיה לבנות את קטלוג המלאי מתוך האפליקציה עצמה. -->
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingStart="@dimen/md_gutter"
+        android:paddingTop="@dimen/md_unit"
+        android:paddingEnd="@dimen/md_gutter"
+        android:paddingBottom="@dimen/md_unit">
+
+        <!-- הברקוד שנסרק - לתצוגה בלבד -->
+        <TextView
+            style="@style/Widget.MedTrack.FieldLabel"
+            android:text="@string/new_item_barcode_label" />
+
+        <TextView
+            android:id="@+id/newItemBarcode"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/md_margin_mobile"
+            android:background="@drawable/bg_input"
+            android:minHeight="48dp"
+            android:gravity="center_vertical"
+            android:paddingStart="@dimen/md_margin_mobile"
+            android:paddingEnd="@dimen/md_margin_mobile"
+            android:textAppearance="@style/TextAppearance.MedTrack.BodyMedium"
+            android:textColor="@color/md_on_surface_variant" />
+
+        <TextView
+            style="@style/Widget.MedTrack.FieldLabel"
+            android:text="@string/new_item_name_label" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/md_touch_target_min"
+            android:layout_marginBottom="@dimen/md_margin_mobile"
+            android:background="@drawable/bg_input"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingStart="@dimen/md_unit"
+            android:paddingEnd="@dimen/md_unit">
+
+            <EditText
+                android:id="@+id/newItemName"
+                style="@style/Widget.MedTrack.EditText"
+                android:hint="@string/new_item_name_hint"
+                android:importantForAutofill="no" />
+
+        </LinearLayout>
+
+        <TextView
+            style="@style/Widget.MedTrack.FieldLabel"
+            android:text="@string/new_item_category_label" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/md_touch_target_min"
+            android:layout_marginBottom="@dimen/md_margin_mobile"
+            android:background="@drawable/bg_input"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingStart="@dimen/md_unit"
+            android:paddingEnd="@dimen/md_unit">
+
+            <EditText
+                android:id="@+id/newItemCategory"
+                style="@style/Widget.MedTrack.EditText"
+                android:hint="@string/new_item_category_hint"
+                android:importantForAutofill="no" />
+
+        </LinearLayout>
+
+        <TextView
+            style="@style/Widget.MedTrack.FieldLabel"
+            android:text="@string/new_item_unit_label" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/md_touch_target_min"
+            android:layout_marginBottom="@dimen/md_margin_mobile"
+            android:background="@drawable/bg_input"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingStart="@dimen/md_unit"
+            android:paddingEnd="@dimen/md_unit">
+
+            <EditText
+                android:id="@+id/newItemUnit"
+                style="@style/Widget.MedTrack.EditText"
+                android:hint="@string/new_item_unit_hint"
+                android:importantForAutofill="no"
+                android:text="יחידה" />
+
+        </LinearLayout>
+
+        <TextView
+            style="@style/Widget.MedTrack.FieldLabel"
+            android:text="@string/new_item_min_label" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/md_touch_target_min"
+            android:background="@drawable/bg_input"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingStart="@dimen/md_unit"
+            android:paddingEnd="@dimen/md_unit">
+
+            <EditText
+                android:id="@+id/newItemMinQuantity"
+                style="@style/Widget.MedTrack.EditText"
+                android:importantForAutofill="no"
+                android:inputType="numberDecimal"
+                android:text="0" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/newItemError"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/md_unit"
+            android:textColor="@color/md_error"
+            android:textSize="16sp"
+            android:visibility="gone" />
+
+    </LinearLayout>
+
+</ScrollView>
