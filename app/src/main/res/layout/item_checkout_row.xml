@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    שורת פריט אחת ברשימת ההוצאה. הגובה המינימלי גדול בכוונה  צריך להיות
+    אפשר ללחוץ עליה בביטחון גם עם כפפות ובלי להסתכל מקרוב.
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="12dp"
+    android:background="@drawable/bg_item_row"
+    android:clickable="true"
+    android:focusable="true"
+    android:gravity="center_vertical"
+    android:minHeight="80dp"
+    android:orientation="horizontal"
+    android:padding="@dimen/md_gutter">
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/itemName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/TextAppearance.MedTrack.HeadlineMedium" />
+
+        <TextView
+            android:id="@+id/itemStock"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:textAppearance="@style/TextAppearance.MedTrack.BodyMedium"
+            android:textColor="@color/md_on_surface_variant" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/minusLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/md_margin_mobile"
+        android:text="@string/checkout_minus_one"
+        android:textAlignment="center"
+        android:textColor="@color/md_primary"
+        android:textDirection="ltr"
+        android:textSize="24sp"
+        android:textStyle="bold" />
+
+    <ImageView
+        android:layout_width="@dimen/md_icon_md"
+        android:layout_height="@dimen/md_icon_md"
+        android:layout_marginStart="@dimen/md_margin_mobile"
+        android:contentDescription="@null"
+        android:src="@drawable/ic_chevron_left"
+        app:tint="@color/md_outline" />
+
+</LinearLayout>

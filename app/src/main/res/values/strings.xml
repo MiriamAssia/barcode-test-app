@@ -67,4 +67,28 @@
     <string name="cd_decrease">הקטנת כמות</string>
     <string name="cd_expand">הרחבה</string>
 
+    <!-- מסך הוצאת מלאי מהירה -->
+    <string name="checkout_title">הוצאת מלאי</string>
+    <string name="checkout_hint">לחץ על פריט להוצאת יחידה אחת | לחיצה ארוכה לבחירת כמות</string>
+    <string name="checkout_search_hint">חיפוש פריט מהיר...</string>
+    <string name="checkout_stock_available">מלאי זמין: %1$s %2$s</string>
+    <string name="checkout_minus_one">-1</string>
+    <string name="checkout_empty">אין פריטים פעילים במלאי</string>
+    <string name="checkout_no_results">לא נמצא פריט מתאים</string>
+    <string name="checkout_loading">טוען פריטים...</string>
+    <string name="checkout_out_of_stock">הפריט אזל מהמלאי</string>
+    <string name="checkout_scan_prompt">כוון/י את המצלמה לברקוד</string>
+    <string name="checkout_scan_not_found">הברקוד שנסרק לא נמצא במלאי</string>
+
+    <!-- הודעת ביטול -->
+    <string name="undo_message">הוצאו %1$s %2$s</string>
+    <string name="undo_action">ביטול</string>
+
+    <!-- חלון בחירת כמות -->
+    <string name="quantity_dialog_title">בחר כמות להוצאה</string>
+    <string name="quantity_dialog_confirm">אישור</string>
+
+    <!-- כותרת קבועה -->
+    <string name="app_title">ניהול מלאי רפואי</string>
+
 </resources>

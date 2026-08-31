@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    מסך הוצאת מלאי מהירה  המסך שהצוות הקליני משתמש בו הכי הרבה.
+    הכל בנוי סביב מהירות: שורת חיפוש וסריקה למעלה, ורשימה שבה הקשה אחת
+    מוציאה יחידה. הודעת הביטול צפה מעל הרשימה ולא דוחפת אותה.
+-->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/md_background">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <!-- ===================== הנחיה למשתמש ===================== -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:paddingStart="@dimen/md_gutter"
+            android:paddingTop="@dimen/md_margin_mobile"
+            android:paddingEnd="@dimen/md_gutter"
+            android:paddingBottom="@dimen/md_margin_mobile"
+            android:text="@string/checkout_hint"
+            android:textAppearance="@style/TextAppearance.MedTrack.BodyMedium"
+            android:textColor="@color/md_on_surface_variant" />
+
+        <!-- ===================== חיפוש + סריקה ===================== -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingStart="@dimen/md_margin_mobile"
+            android:paddingEnd="@dimen/md_margin_mobile"
+            android:paddingBottom="@dimen/md_margin_mobile">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="@dimen/md_touch_target_min"
+                android:layout_weight="1"
+                android:background="@drawable/bg_input"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingStart="@dimen/md_margin_mobile"
+                android:paddingEnd="@dimen/md_unit">
+
+                <ImageView
+                    android:layout_width="@dimen/md_icon_md"
+                    android:layout_height="@dimen/md_icon_md"
+                    android:contentDescription="@string/cd_search"
+                    android:src="@drawable/ic_search"
+                    app:tint="@color/md_outline" />
+
+                <EditText
+                    android:id="@+id/searchInput"
+                    style="@style/Widget.MedTrack.EditText"
+                    android:hint="@string/checkout_search_hint"
+                    android:imeOptions="actionSearch"
+                    android:importantForAutofill="no"
+                    android:inputType="text" />
+
+            </LinearLayout>
+
+            <ImageButton
+                android:id="@+id/scanButton"
+                android:layout_width="@dimen/md_touch_target_min"
+                android:layout_height="@dimen/md_touch_target_min"
+                android:layout_marginStart="12dp"
+                android:background="@drawable/bg_scan_button"
+                android:contentDescription="@string/cd_scan"
+                android:padding="@dimen/md_margin_mobile"
+                android:src="@drawable/ic_barcode_scanner"
+                app:tint="@color/md_on_tertiary" />
+
+        </LinearLayout>
+
+        <!-- ===================== רשימת הפריטים ===================== -->
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/itemsList"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clipToPadding="false"
+                android:paddingStart="@dimen/md_margin_mobile"
+                android:paddingEnd="@dimen/md_margin_mobile"
+                android:paddingBottom="88dp"
+                android:scrollbars="vertical" />
+
+            <ProgressBar
+                android:id="@+id/listProgress"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/emptyText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:paddingStart="@dimen/md_gutter"
+                android:paddingEnd="@dimen/md_gutter"
+                android:textAppearance="@style/TextAppearance.MedTrack.BodyLarge"
+                android:textColor="@color/md_on_surface_variant"
+                android:visibility="gone" />
+
+        </FrameLayout>
+
+    </LinearLayout>
+
+    <!-- ===================== הודעת ביטול צפה ===================== -->
+    <LinearLayout
+        android:id="@+id/undoBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_marginStart="@dimen/md_margin_mobile"
+        android:layout_marginEnd="@dimen/md_margin_mobile"
+        android:layout_marginBottom="@dimen/md_margin_mobile"
+        android:background="@drawable/bg_snackbar"
+        android:gravity="center_vertical"
+        android:minHeight="@dimen/md_touch_target_min"
+        android:orientation="horizontal"
+        android:paddingStart="@dimen/md_gutter"
+        android:paddingEnd="@dimen/md_unit"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/undoText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textAppearance="@style/TextAppearance.MedTrack.BodyMedium" />
+
+        <TextView
+            android:id="@+id/undoButton"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/md_touch_target_min"
+            android:background="?attr/selectableItemBackground"
+            android:gravity="center"
+            android:paddingStart="@dimen/md_margin_mobile"
+            android:paddingEnd="@dimen/md_margin_mobile"
+            android:text="@string/undo_action"
+            android:textColor="@color/md_tertiary"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
+</FrameLayout>

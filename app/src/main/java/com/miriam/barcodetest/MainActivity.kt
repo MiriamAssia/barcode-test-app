@@ -8,6 +8,7 @@ import androidx.lifecycle.lifecycleScope
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.miriam.barcodetest.data.repository.AuthRepository
 import com.miriam.barcodetest.databinding.ActivityMainBinding
+import com.miriam.barcodetest.ui.CheckoutFragment
 import com.miriam.barcodetest.ui.IntakeFragment
 import com.miriam.barcodetest.ui.PlaceholderFragment
 import io.github.jan.supabase.auth.status.SessionStatus
@@ -44,8 +45,8 @@ class MainActivity : AppCompatActivity() {
         }
 
         if (savedInstanceState == null) {
-            // מסך הקליטה הוא ברירת המחדל בשלב הזה - זה המסך היחיד שנבנה עד כה
-            binding.bottomNav.selectedItemId = R.id.nav_intake
+            // מסך ההוצאה המהירה הוא ברירת המחדל - זה מה שהצוות הקליני צריך רוב הזמן
+            binding.bottomNav.selectedItemId = R.id.nav_checkout
         } else {
             currentTabId = savedInstanceState.getInt(STATE_TAB_ID, 0)
         }
@@ -69,33 +70,21 @@ class MainActivity : AppCompatActivity() {
         if (tabId == currentTabId) return
         currentTabId = tabId
 
-        val fragment: Fragment
-        val title: String
-
-        when (tabId) {
-            R.id.nav_intake -> {
-                fragment = IntakeFragment()
-                title = getString(R.string.intake_title)
-            }
-            R.id.nav_checkout -> {
-                title = getString(R.string.nav_checkout)
-                fragment = PlaceholderFragment.newInstance(title, R.drawable.ic_cart_checkout)
-            }
-            R.id.nav_inventory -> {
-                title = getString(R.string.nav_inventory)
-                fragment = PlaceholderFragment.newInstance(title, R.drawable.ic_inventory)
-            }
-            R.id.nav_alerts -> {
-                title = getString(R.string.nav_alerts)
-                fragment = PlaceholderFragment.newInstance(title, R.drawable.ic_notifications)
-            }
-            else -> {
-                title = getString(R.string.nav_reports)
-                fragment = PlaceholderFragment.newInstance(title, R.drawable.ic_analytics)
-            }
+        // הכותרת העליונה קבועה בכל המסכים - הסרגל התחתון כבר אומר איפה אנחנו
+        val fragment: Fragment = when (tabId) {
+            R.id.nav_checkout -> CheckoutFragment()
+            R.id.nav_intake -> IntakeFragment()
+            R.id.nav_inventory -> PlaceholderFragment.newInstance(
+                getString(R.string.nav_inventory), R.drawable.ic_inventory
+            )
+            R.id.nav_alerts -> PlaceholderFragment.newInstance(
+                getString(R.string.nav_alerts), R.drawable.ic_notifications
+            )
+            else -> PlaceholderFragment.newInstance(
+                getString(R.string.nav_reports), R.drawable.ic_analytics
+            )
         }
 
-        binding.toolbarTitle.text = title
         supportFragmentManager.beginTransaction()
             .replace(R.id.navHostContainer, fragment)
             .commit()

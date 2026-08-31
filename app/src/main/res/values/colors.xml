@@ -46,4 +46,7 @@
     <color name="md_error_container">#FF991B1B</color>
     <color name="md_on_error_container">#FFFEE2E2</color>
 
+    <!-- כתום אזהרה - מלאי שירד מתחת לסף המינימום שהוגדר לפריט -->
+    <color name="md_warning">#FFF59E0B</color>
+
 </resources>
