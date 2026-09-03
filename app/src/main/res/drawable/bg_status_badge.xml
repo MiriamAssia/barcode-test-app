@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- תגית מצב מלאי. הצבע עצמו נקבע בקוד לפי הסטטוס  -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
+    <solid android:color="@color/md_surface_container" />
+    <corners android:radius="999dp" />
+</shape>

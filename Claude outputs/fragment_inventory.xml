@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    רשימת המלאי המלאה  המסך של מנהלת המלאי. חיפוש לפי שם, סינון לפי מצב
+    ולפי קטגוריה, והקשה על פריט פותחת את כרטיס הפריט המלא.
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/md_background"
+    android:orientation="vertical">
+
+    <!-- ===================== חיפוש ===================== -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/md_touch_target_min"
+        android:layout_marginStart="@dimen/md_margin_mobile"
+        android:layout_marginTop="@dimen/md_margin_mobile"
+        android:layout_marginEnd="@dimen/md_margin_mobile"
+        android:background="@drawable/bg_input"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingStart="@dimen/md_margin_mobile"
+        android:paddingEnd="@dimen/md_unit">
+
+        <ImageView
+            android:layout_width="@dimen/md_icon_md"
+            android:layout_height="@dimen/md_icon_md"
+            android:contentDescription="@string/cd_search"
+            android:src="@drawable/ic_search"
+            app:tint="@color/md_outline" />
+
+        <EditText
+            android:id="@+id/searchInput"
+            style="@style/Widget.MedTrack.EditText"
+            android:hint="@string/inventory_search_hint"
+            android:imeOptions="actionSearch"
+            android:importantForAutofill="no"
+            android:inputType="text" />
+
+    </LinearLayout>
+
+    <!-- ===================== סינון לפי מצב ===================== -->
+    <com.google.android.material.chip.ChipGroup
+        android:id="@+id/statusChips"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/md_margin_mobile"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="@dimen/md_margin_mobile"
+        app:selectionRequired="true"
+        app:singleLine="true"
+        app:singleSelection="true">
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chipStatusAll"
+            style="@style/Widget.Material3.Chip.Filter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:text="@string/inventory_filter_all" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chipStatusLow"
+            style="@style/Widget.Material3.Chip.Filter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/inventory_filter_low" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chipStatusOut"
+            style="@style/Widget.Material3.Chip.Filter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/inventory_filter_out" />
+
+    </com.google.android.material.chip.ChipGroup>
+
+    <!-- ===================== סינון לפי קטגוריה ===================== -->
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="@dimen/md_margin_mobile"
+        android:paddingEnd="@dimen/md_margin_mobile"
+        android:scrollbars="none">
+
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/categoryChips"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/md_unit"
+            app:selectionRequired="true"
+            app:singleLine="true"
+            app:singleSelection="true" />
+
+    </HorizontalScrollView>
+
+    <!-- ===================== מונה תוצאות ===================== -->
+    <TextView
+        android:id="@+id/resultCount"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/md_margin_mobile"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="@dimen/md_margin_mobile"
+        android:textAppearance="@style/TextAppearance.MedTrack.BodyMedium"
+        android:textColor="@color/md_on_surface_variant" />
+
+    <!-- ===================== הרשימה ===================== -->
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_marginTop="@dimen/md_unit">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/itemsList"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:paddingStart="@dimen/md_margin_mobile"
+            android:paddingEnd="@dimen/md_margin_mobile"
+            android:paddingBottom="@dimen/md_margin_mobile"
+            android:scrollbars="vertical" />
+
+        <ProgressBar
+            android:id="@+id/listProgress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/emptyText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:paddingStart="@dimen/md_gutter"
+            android:paddingEnd="@dimen/md_gutter"
+            android:textAppearance="@style/TextAppearance.MedTrack.BodyLarge"
+            android:textColor="@color/md_on_surface_variant"
+            android:visibility="gone" />
+
+    </FrameLayout>
+
+</LinearLayout>
