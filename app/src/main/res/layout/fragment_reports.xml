@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    דוח צריכה: כמה יצא מהמלאי בטווח תאריכים, ומי הפריטים שנשרפים הכי מהר.
+    נועד לתכנון הזמנות, ולכן הדגש הוא על סיכומים ודירוג ולא על יומן מפורט.
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/md_background"
+    android:orientation="vertical">
+
+    <!-- ===================== טווח תאריכים ===================== -->
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="@dimen/md_margin_mobile"
+        android:paddingTop="@dimen/md_margin_mobile"
+        android:paddingEnd="@dimen/md_margin_mobile"
+        android:scrollbars="none">
+
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/rangeChips"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:selectionRequired="true"
+            app:singleLine="true"
+            app:singleSelection="true">
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipRange7"
+                style="@style/Widget.Material3.Chip.Filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/reports_range_7" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipRange30"
+                style="@style/Widget.Material3.Chip.Filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="@string/reports_range_30" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipRangeMonth"
+                style="@style/Widget.Material3.Chip.Filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/reports_range_month" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipRangeCustom"
+                style="@style/Widget.Material3.Chip.Filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/reports_range_custom" />
+
+        </com.google.android.material.chip.ChipGroup>
+
+    </HorizontalScrollView>
+
+    <TextView
+        android:id="@+id/rangeLabel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/md_margin_mobile"
+        android:layout_marginTop="@dimen/md_unit"
+        android:layout_marginEnd="@dimen/md_margin_mobile"
+        android:textAppearance="@style/TextAppearance.MedTrack.BodyMedium"
+        android:textColor="@color/md_on_surface_variant"
+        android:textSize="16sp" />
+
+    <!-- ===================== פילוח ===================== -->
+    <com.google.android.material.chip.ChipGroup
+        android:id="@+id/groupChips"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/md_margin_mobile"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="@dimen/md_margin_mobile"
+        app:selectionRequired="true"
+        app:singleLine="true"
+        app:singleSelection="true">
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chipGroupItem"
+            style="@style/Widget.Material3.Chip.Filter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:text="@string/reports_group_item" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chipGroupCategory"
+            style="@style/Widget.Material3.Chip.Filter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/reports_group_category" />
+
+    </com.google.android.material.chip.ChipGroup>
+
+    <!-- ===================== סיכומים ===================== -->
+    <LinearLayout
+        android:id="@+id/summaryCard"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/md_margin_mobile"
+        android:layout_marginTop="@dimen/md_margin_mobile"
+        android:layout_marginEnd="@dimen/md_margin_mobile"
+        android:background="@drawable/bg_card"
+        android:orientation="horizontal"
+        android:paddingStart="@dimen/md_margin_mobile"
+        android:paddingTop="@dimen/md_gutter"
+        android:paddingEnd="@dimen/md_margin_mobile"
+        android:paddingBottom="@dimen/md_gutter">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/summaryUnits"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/md_primary"
+                android:textDirection="ltr"
+                android:textSize="28sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/reports_total_units"
+                android:textColor="@color/md_on_surface_variant"
+                android:textSize="14sp" />
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="@color/md_outline_variant" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/summaryItems"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/md_on_surface"
+                android:textDirection="ltr"
+                android:textSize="28sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/reports_distinct_items"
+                android:textColor="@color/md_on_surface_variant"
+                android:textSize="14sp" />
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="@color/md_outline_variant" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/summaryTransactions"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/md_on_surface"
+                android:textDirection="ltr"
+                android:textSize="28sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/reports_transactions"
+                android:textColor="@color/md_on_surface_variant"
+                android:textSize="14sp" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <!-- ===================== הדירוג ===================== -->
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="@dimen/md_margin_mobile"
+        android:layout_weight="1">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/reportList"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:paddingStart="@dimen/md_margin_mobile"
+            android:paddingEnd="@dimen/md_margin_mobile"
+            android:paddingBottom="@dimen/md_margin_mobile"
+            android:scrollbars="vertical" />
+
+        <ProgressBar
+            android:id="@+id/reportProgress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/emptyText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:paddingStart="@dimen/md_gutter"
+            android:paddingEnd="@dimen/md_gutter"
+            android:textAppearance="@style/TextAppearance.MedTrack.BodyLarge"
+            android:textColor="@color/md_on_surface_variant"
+            android:visibility="gone" />
+
+    </FrameLayout>
+
+</LinearLayout>
