@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- כותרת קבוצה ברשימת ההתראות, עם מספר ההתראות בקבוצה -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:paddingTop="@dimen/md_margin_mobile"
+    android:paddingBottom="12dp">
+
+    <TextView
+        android:id="@+id/headerTitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:textAppearance="@style/TextAppearance.MedTrack.LabelLarge"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/headerCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_status_badge"
+        android:minWidth="32dp"
+        android:gravity="center"
+        android:paddingStart="12dp"
+        android:paddingTop="2dp"
+        android:paddingEnd="12dp"
+        android:paddingBottom="2dp"
+        android:textDirection="ltr"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
+</LinearLayout>

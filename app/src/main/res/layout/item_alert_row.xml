@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- שורת התראה אחת. הקשה עליה פותחת את כרטיס הפריט המלא -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="12dp"
+    android:background="@drawable/bg_item_row"
+    android:clickable="true"
+    android:focusable="true"
+    android:gravity="center_vertical"
+    android:minHeight="72dp"
+    android:orientation="horizontal"
+    android:padding="@dimen/md_margin_mobile">
+
+    <ImageView
+        android:id="@+id/alertIcon"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="@drawable/bg_alert_icon"
+        android:contentDescription="@null"
+        android:padding="@dimen/md_unit"
+        android:src="@drawable/ic_error_outline"
+        app:tint="@color/md_error" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/alertTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/TextAppearance.MedTrack.BodyLarge"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/alertDetail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:textColor="@color/md_on_surface_variant"
+            android:textSize="16sp" />
+
+    </LinearLayout>
+
+    <ImageView
+        android:layout_width="@dimen/md_icon_md"
+        android:layout_height="@dimen/md_icon_md"
+        android:layout_marginStart="@dimen/md_unit"
+        android:contentDescription="@null"
+        android:src="@drawable/ic_chevron_left"
+        app:tint="@color/md_outline" />
+
+</LinearLayout>

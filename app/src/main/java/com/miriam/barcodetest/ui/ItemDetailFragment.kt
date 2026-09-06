@@ -157,7 +157,7 @@ class ItemDetailFragment : Fragment() {
                         row.batchExpiry.text = base + " · " + getString(R.string.detail_expired)
                         row.batchExpiry.setTextColor(StockDisplay.statusColor(context, "out"))
                     }
-                    daysLeft != null && daysLeft <= EXPIRY_WARNING_DAYS -> {
+                    daysLeft != null && daysLeft <= StockDisplay.EXPIRY_WARNING_DAYS -> {
                         row.batchExpiry.text = base + " · " +
                             getString(R.string.detail_expires_soon, daysLeft.toInt())
                         row.batchExpiry.setTextColor(StockDisplay.statusColor(context, "low"))
@@ -222,9 +222,6 @@ class ItemDetailFragment : Fragment() {
         private const val ARG_UNIT = "item_unit"
         private const val ARG_QUANTITY = "item_quantity"
         private const val ARG_MIN_QUANTITY = "item_min_quantity"
-
-        /** כמה ימים לפני התפוגה כבר צובעים באזהרה */
-        private const val EXPIRY_WARNING_DAYS = 30L
 
         fun newInstance(item: ItemStockStatus): ItemDetailFragment {
             val fragment = ItemDetailFragment()

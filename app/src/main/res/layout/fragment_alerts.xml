@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    מסך התראות: מה דורש את תשומת הלב של מנהלת המלאי עכשיו. שתי קבוצות
+    בתוך רשימה אחת  מלאי שנגמר או עומד להיגמר, ואצוות שעומדות לפוג.
+-->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/md_background">
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/alertsList"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:paddingStart="@dimen/md_margin_mobile"
+        android:paddingTop="@dimen/md_unit"
+        android:paddingEnd="@dimen/md_margin_mobile"
+        android:paddingBottom="@dimen/md_margin_mobile"
+        android:scrollbars="vertical" />
+
+    <ProgressBar
+        android:id="@+id/alertsProgress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone" />
+
+    <LinearLayout
+        android:id="@+id/emptyState"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:paddingStart="@dimen/md_gutter"
+        android:paddingEnd="@dimen/md_gutter"
+        android:visibility="gone">
+
+        <ImageView
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:alpha="0.5"
+            android:contentDescription="@null"
+            android:src="@drawable/ic_check_circle"
+            app:tint="@color/md_tertiary" />
+
+        <TextView
+            android:id="@+id/emptyText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/md_margin_mobile"
+            android:text="@string/alerts_none"
+            android:textAppearance="@style/TextAppearance.MedTrack.BodyLarge"
+            android:textColor="@color/md_on_surface_variant" />
+
+    </LinearLayout>
+
+</FrameLayout>

@@ -3,16 +3,21 @@ package com.miriam.barcodetest
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.miriam.barcodetest.data.Resource
+import com.miriam.barcodetest.data.repository.AlertsRepository
 import com.miriam.barcodetest.data.repository.AuthRepository
 import com.miriam.barcodetest.databinding.ActivityMainBinding
+import com.miriam.barcodetest.ui.AlertsFragment
 import com.miriam.barcodetest.ui.CheckoutFragment
 import com.miriam.barcodetest.ui.IntakeFragment
 import com.miriam.barcodetest.ui.InventoryFragment
 import com.miriam.barcodetest.ui.PlaceholderFragment
+import com.miriam.barcodetest.ui.StockDisplay
 import io.github.jan.supabase.auth.status.SessionStatus
 import kotlinx.coroutines.launch
 
@@ -30,6 +35,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private val authRepository = AuthRepository()
+    private val alertsRepository = AlertsRepository()
 
     /** מונע בנייה מחדש של אותו מסך כשלוחצים שוב על טאב שכבר פתוח */
     private var currentTabId: Int = 0
@@ -63,9 +69,39 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        // מרעננים את מונה ההתראות בכל חזרה לאפליקציה, כדי שהמספר על הסרגל
+        // ישקף את המצב הנוכחי גם בלי להיכנס למסך ההתראות
+        refreshAlertsBadge()
+    }
+
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putInt(STATE_TAB_ID, currentTabId)
+    }
+
+    /**
+     * תגית מספרית על אייקון ההתראות. אם אין התראות התגית מוסתרת לגמרי -
+     * עיגול ריק על האייקון היה קורא כאילו יש משהו לטפל בו.
+     */
+    private fun refreshAlertsBadge() {
+        lifecycleScope.launch {
+            val result = alertsRepository.getAlerts(StockDisplay.EXPIRY_WARNING_DAYS)
+            if (result !is Resource.Success) return@launch
+
+            val badge = binding.bottomNav.getOrCreateBadge(R.id.nav_alerts)
+            val count = result.data.total
+            if (count > 0) {
+                badge.number = count
+                badge.backgroundColor = ContextCompat.getColor(this@MainActivity, R.color.md_error)
+                badge.badgeTextColor = ContextCompat.getColor(this@MainActivity, R.color.md_on_error)
+                badge.isVisible = true
+            } else {
+                badge.isVisible = false
+                badge.clearNumber()
+            }
+        }
     }
 
     private fun showTab(tabId: Int) {
@@ -77,9 +113,7 @@ class MainActivity : AppCompatActivity() {
             R.id.nav_checkout -> CheckoutFragment()
             R.id.nav_intake -> IntakeFragment()
             R.id.nav_inventory -> InventoryFragment()
-            R.id.nav_alerts -> PlaceholderFragment.newInstance(
-                getString(R.string.nav_alerts), R.drawable.ic_notifications
-            )
+            R.id.nav_alerts -> AlertsFragment()
             else -> PlaceholderFragment.newInstance(
                 getString(R.string.nav_reports), R.drawable.ic_analytics
             )

@@ -129,4 +129,18 @@
     <string name="tx_out">הוצאה</string>
     <string name="tx_adjustment">התאמה</string>
 
+    <!-- מסך התראות -->
+    <string name="alerts_section_stock">מלאי נמוך או אזל</string>
+    <string name="alerts_section_expiry">אצוות שעומדות לפוג</string>
+    <string name="alerts_none">אין התראות פתוחות</string>
+    <string name="alerts_loading">טוען התראות...</string>
+    <string name="alerts_stock_detail">נותרו %1$s %2$s · סף התראה %3$s</string>
+    <string name="alerts_stock_out">אזל מהמלאי · סף התראה %1$s</string>
+    <string name="alerts_expiry_batch">אצווה %1$s</string>
+    <string name="alerts_expiry_no_batch">אצווה ללא מספר</string>
+    <string name="alerts_expiry_expired">פג תוקף לפני %1$d ימים</string>
+    <string name="alerts_expiry_today">פג תוקף היום</string>
+    <string name="alerts_expiry_days">פג בעוד %1$d ימים</string>
+    <string name="alerts_section_count">%1$d</string>
+
 </resources>
