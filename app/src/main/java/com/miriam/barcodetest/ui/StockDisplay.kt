@@ -3,6 +3,7 @@ package com.miriam.barcodetest.ui
 import android.content.Context
 import androidx.core.content.ContextCompat
 import com.miriam.barcodetest.R
+import java.math.BigDecimal
 import java.time.LocalDate
 import java.time.OffsetDateTime
 import java.time.ZoneId
@@ -26,9 +27,20 @@ object StockDisplay {
     private val dayMonthYear: DateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
     private val dayMonthYearTime: DateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")
 
-    /** מספרים שלמים מוצגים בלי נקודה עשרונית מיותרת: 5 ולא 5.0 */
-    fun quantity(value: Double): String =
-        if (value == value.toLong().toDouble()) value.toLong().toString() else value.toString()
+    /**
+     * כמות לתצוגה: מספר שלם בלי נקודה עשרונית מיותרת (5 ולא 5.0), ושבר
+     * מעוגל לשלוש ספרות - בדיוק כמו numeric(12,3) ב-DB.
+     *
+     * העיגול חיוני ולא קוסמטי: Double לא מייצג שברים עשרוניים במדויק, ולכן
+     * סכום של כמויות (למשל בדוח הצריכה, שמסכם תנועות) היה מוצג כ-
+     * "0.30000000000000004" במקום "0.3". העיגול לדיוק של העמודה מחזיר בדיוק
+     * את המספר שנשמר, ו-BigDecimal מוודא שגם התצוגה לא תחזור לכתיב מדעי.
+     */
+    fun quantity(value: Double): String {
+        val rounded = Math.round(value * 1000.0) / 1000.0
+        if (rounded == rounded.toLong().toDouble()) return rounded.toLong().toString()
+        return BigDecimal.valueOf(rounded).stripTrailingZeros().toPlainString()
+    }
 
     /**
      * כמות עם סימן לתצוגה ביומן התנועות.

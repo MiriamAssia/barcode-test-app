@@ -1,15 +1,21 @@
 package com.miriam.barcodetest.ui
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.miriam.barcodetest.R
 import com.miriam.barcodetest.data.model.ItemStockStatus
 import com.miriam.barcodetest.databinding.ItemInventoryRowBinding
 
-/** שורות טבלת המלאי. הקשה על שורה פותחת את כרטיס הפריט. */
+/**
+ * שורות טבלת המלאי. הקשה על שורה פותחת את כרטיס הפריט, ולחיצה ארוכה פותחת
+ * את פעולות הפריט (כיבוי/הפעלה ומחיקה) - אותה מחווה כמו בחירת כמות במסך
+ * ההוצאה, כדי שהיא תהיה צפויה.
+ */
 class InventoryAdapter(
-    private val onItemClick: (ItemStockStatus) -> Unit
+    private val onItemClick: (ItemStockStatus) -> Unit,
+    private val onItemLongPress: (ItemStockStatus) -> Unit
 ) : RecyclerView.Adapter<InventoryAdapter.ItemViewHolder>() {
 
     private var items: List<ItemStockStatus> = emptyList()
@@ -51,7 +57,18 @@ class InventoryAdapter(
             binding.itemStatusBadge.text = StockDisplay.statusLabel(context, status)
             binding.itemStatusBadge.setTextColor(color)
 
+            // פריט כבוי: תגית מפורשת ושורה מעומעמת. שני הערכים נקבעים בכל
+            // bind ולא רק כשהם משתנים, אחרת מיחזור השורות ב-RecyclerView היה
+            // גורם לפריט פעיל לרשת עמעום של פריט כבוי שגלל מעליו.
+            binding.itemInactiveBadge.visibility =
+                if (item.isActive) View.GONE else View.VISIBLE
+            binding.root.alpha = if (item.isActive) 1f else 0.55f
+
             binding.root.setOnClickListener { onItemClick(item) }
+            binding.root.setOnLongClickListener {
+                onItemLongPress(item)
+                true
+            }
         }
     }
 }

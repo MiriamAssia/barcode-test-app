@@ -55,7 +55,7 @@ class CheckoutAdapter(
             binding.itemName.text = item.name
             binding.itemStock.text = binding.root.context.getString(
                 R.string.checkout_stock_available,
-                formatQuantity(effectiveQuantity),
+                StockDisplay.quantity(effectiveQuantity),
                 item.unit
             )
 
@@ -88,10 +88,5 @@ class CheckoutAdapter(
                 }
             }
         }
-    }
-
-    private companion object {
-        fun formatQuantity(value: Double): String =
-            if (value == value.toLong().toDouble()) value.toLong().toString() else value.toString()
     }
 }

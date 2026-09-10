@@ -41,6 +41,20 @@
     <string name="intake_quantity_invalid">יש להזין כמות גדולה מאפס</string>
     <string name="intake_item_not_found">פריט לא נמצא במערכת</string>
     <string name="intake_item_required">הפריט עדיין לא אותר. הקישי על זכוכית המגדלת כדי לחפש אותו, וצרי פריט חדש אם הוא לא קיים.</string>
+    <string name="quantity_must_be_positive">יש להזין כמות גדולה מאפס</string>
+    <string name="quantity_exceeds_stock">במלאי יש רק %1$s %2$s</string>
+
+    <!-- פעולות על פריט ברשימת המלאי (לחיצה ארוכה על שורה) -->
+    <string name="inventory_inactive_badge">לא פעיל</string>
+    <string name="item_action_deactivate">כיבוי הפריט</string>
+    <string name="item_action_activate">הפעלת הפריט מחדש</string>
+    <string name="item_action_delete">מחיקה לצמיתות</string>
+    <string name="item_delete_title">מחיקת פריט לצמיתות</string>
+    <string name="item_delete_confirm_clean">למחוק את \"%1$s\"? לפריט הזה אין עדיין אצוות או תנועות, ולכן לא תאבד שום היסטוריה.</string>
+    <string name="item_delete_confirm_history">לפריט \"%1$s\" יש היסטוריה: %2$d תנועות ו-%3$d אצוות. מחיקה לצמיתות תמחק גם אותן, דוחות צריכה של תקופות עבר ישתנו למפרע, ואי אפשר לשחזר. למחוק בכל זאת?</string>
+    <string name="item_deleted">\"%1$s\" נמחק לצמיתות</string>
+    <string name="item_deactivated">\"%1$s\" כובה ועבר לתחתית הרשימה</string>
+    <string name="item_activated">\"%1$s\" הופעל מחדש</string>
     <string name="intake_create_item_question">הברקוד לא קיים במערכת. ליצור פריט חדש?</string>
     <string name="intake_create_item">יצירת פריט חדש</string>
     <string name="intake_searching">מחפש פריט...</string>

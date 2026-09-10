@@ -201,28 +201,53 @@ class CheckoutFragment : Fragment() {
         val dialogBinding = DialogQuantityBinding.inflate(layoutInflater)
         dialogBinding.quantityItemName.text = item.name
 
+        // המלאי שבאמת אפשר להוציא עכשיו: מה שרשום בשרת פחות מה שכבר ממתין
+        // בחלון הביטול לאותו פריט. בלי החיסור הזה אפשר היה לבקש פעמיים את
+        // אותה יחידה אחרונה.
+        val pendingForItem = if (pendingItem?.id == item.id) pendingQuantity else 0.0
+        val available = (item.currentQuantity - pendingForItem).coerceAtLeast(0.0)
+
         dialogBinding.quantityMinus.setOnClickListener {
-            changeDialogQuantity(dialogBinding, -1.0)
+            changeDialogQuantity(dialogBinding, -1.0, available)
         }
         dialogBinding.quantityPlus.setOnClickListener {
-            changeDialogQuantity(dialogBinding, 1.0)
+            changeDialogQuantity(dialogBinding, 1.0, available)
         }
 
         MaterialAlertDialogBuilder(requireContext())
             .setTitle(R.string.quantity_dialog_title)
             .setView(dialogBinding.root)
             .setPositiveButton(R.string.quantity_dialog_confirm) { _, _ ->
+                // קודם הדיאלוג פשוט נסגר בשקט כשהשדה היה ריק או אפס, ולא היה
+                // שום רמז לכך שההוצאה לא נרשמה.
                 val quantity = dialogBinding.quantityInput.text.toString().toDoubleOrNull() ?: 0.0
-                if (quantity > 0.0) queueCheckout(item, quantity)
+                when {
+                    quantity <= 0.0 -> toast(getString(R.string.quantity_must_be_positive))
+                    quantity > available -> toast(
+                        getString(
+                            R.string.quantity_exceeds_stock,
+                            StockDisplay.quantity(available),
+                            item.unit
+                        )
+                    )
+                    else -> queueCheckout(item, quantity)
+                }
             }
             .setNegativeButton(R.string.cancel, null)
             .show()
     }
 
-    private fun changeDialogQuantity(dialogBinding: DialogQuantityBinding, delta: Double) {
+    private fun changeDialogQuantity(
+        dialogBinding: DialogQuantityBinding,
+        delta: Double,
+        available: Double
+    ) {
         val current = dialogBinding.quantityInput.text.toString().toDoubleOrNull() ?: 0.0
-        val next = (current + delta).coerceAtLeast(1.0)
-        dialogBinding.quantityInput.setText(formatQuantity(next))
+        // הגבול העליון הוא המלאי הזמין, כדי שהכפתורים לא יציעו כמות שאי אפשר
+        // להוציא. אם אזל המלאי לגמרי נשארים על 1 - הוולידציה באישור תעצור.
+        val next = (current + delta).coerceIn(1.0, maxOf(available, 1.0))
+        dialogBinding.quantityInput.setText(StockDisplay.quantity(next))
+        dialogBinding.quantityInput.setSelection(dialogBinding.quantityInput.text.length)
     }
 
     // ======================= הוצאה, המתנה וביטול =======================
@@ -306,8 +331,8 @@ class CheckoutFragment : Fragment() {
         Toast.makeText(appContext, message, Toast.LENGTH_LONG).show()
     }
 
-    private fun formatQuantity(value: Double): String =
-        if (value == value.toLong().toDouble()) value.toLong().toString() else value.toString()
+    /** פורמט אחיד לכל המסכים, כולל עיגול לדיוק של העמודה ב-DB */
+    private fun formatQuantity(value: Double): String = StockDisplay.quantity(value)
 
     private companion object {
         /** אורך חלון הביטול, בהתאם לעיצוב */

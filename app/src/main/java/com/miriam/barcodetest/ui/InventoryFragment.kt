@@ -6,14 +6,18 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.chip.Chip
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.miriam.barcodetest.R
 import com.miriam.barcodetest.data.Resource
 import com.miriam.barcodetest.data.model.ItemStockStatus
+import com.miriam.barcodetest.data.repository.BatchesRepository
 import com.miriam.barcodetest.data.repository.ItemsRepository
+import com.miriam.barcodetest.data.repository.TransactionsRepository
 import com.miriam.barcodetest.databinding.FragmentInventoryBinding
 import kotlinx.coroutines.launch
 
@@ -30,6 +34,8 @@ class InventoryFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val itemsRepository = ItemsRepository()
+    private val transactionsRepository = TransactionsRepository()
+    private val batchesRepository = BatchesRepository()
     private lateinit var adapter: InventoryAdapter
 
     private var allItems: List<ItemStockStatus> = emptyList()
@@ -49,7 +55,10 @@ class InventoryFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        adapter = InventoryAdapter { item -> openItemDetail(item) }
+        adapter = InventoryAdapter(
+            onItemClick = { item -> openItemDetail(item) },
+            onItemLongPress = { item -> showItemActions(item) }
+        )
         binding.itemsList.layoutManager = LinearLayoutManager(requireContext())
         binding.itemsList.adapter = adapter
 
@@ -84,7 +93,9 @@ class InventoryFragment : Fragment() {
         if (showSpinner) views.listProgress.visibility = View.VISIBLE
 
         viewLifecycleOwner.lifecycleScope.launch {
-            when (val result = itemsRepository.getStockStatuses()) {
+            // כולל פריטים כבויים: הם נשארים ברשימה כדי שאפשר יהיה להפעיל אותם
+            // מחדש או למחוק אותם, אבל יורדים לתחתית (ראו המיון ב-applyFilters).
+            when (val result = itemsRepository.getAllStockStatuses()) {
                 is Resource.Success -> {
                     allItems = result.data
                     _binding?.listProgress?.visibility = View.GONE
@@ -151,10 +162,13 @@ class InventoryFragment : Fragment() {
         val filtered = allItems.filter { item ->
             val matchesQuery = query.isEmpty() || item.name.contains(query, ignoreCase = true)
             val matchesCategory = selectedCategory == null || item.category == selectedCategory
+            // מסנני "נמוך"/"אזל" מיועדים למה שדורש הזמנה, ולכן חלים על פריטים
+            // פעילים בלבד - אחרת כל פריט שהוצא משימוש היה מציף את הרשימה הזו.
             val matchesStatus = statusFilter == null ||
-                StockDisplay.statusOf(item.currentQuantity, item.minQuantity) == statusFilter
+                (item.isActive &&
+                    StockDisplay.statusOf(item.currentQuantity, item.minQuantity) == statusFilter)
             matchesQuery && matchesCategory && matchesStatus
-        }
+        }.sortedWith(compareBy({ !it.isActive }, { it.name }))
 
         adapter.submit(filtered)
         views.resultCount.text = getString(R.string.inventory_count, filtered.size)
@@ -170,6 +184,90 @@ class InventoryFragment : Fragment() {
         val views = _binding ?: return
         views.emptyText.text = message
         views.emptyText.visibility = View.VISIBLE
+    }
+
+    // ======================= פעולות על פריט =======================
+
+    /** תפריט הפעולות שנפתח בלחיצה ארוכה על שורה */
+    private fun showItemActions(item: ItemStockStatus) {
+        val toggleLabel = if (item.isActive) {
+            getString(R.string.item_action_deactivate)
+        } else {
+            getString(R.string.item_action_activate)
+        }
+        val actions = arrayOf(toggleLabel, getString(R.string.item_action_delete))
+
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle(item.name)
+            .setItems(actions) { _, which ->
+                if (which == 0) toggleActive(item) else confirmDelete(item)
+            }
+            .setNegativeButton(R.string.cancel, null)
+            .show()
+    }
+
+    private fun toggleActive(item: ItemStockStatus) {
+        viewLifecycleOwner.lifecycleScope.launch {
+            when (val result = itemsRepository.setItemActive(item.id, !item.isActive)) {
+                is Resource.Error -> toast(result.message)
+                is Resource.Success -> {
+                    toast(
+                        getString(
+                            if (item.isActive) R.string.item_deactivated else R.string.item_activated,
+                            item.name
+                        )
+                    )
+                    if (_binding != null) loadItems(showSpinner = false)
+                }
+                is Resource.Loading -> Unit
+            }
+        }
+    }
+
+    /**
+     * מחיקה לצמיתות. לפני האישור נספרת ההיסטוריה בפועל, כדי שהאזהרה תגיד
+     * מספר אמיתי ולא נוסח כללי - ההבדל בין "יימחקו גם נתונים" לבין "יימחקו
+     * גם 47 תנועות" הוא ההבדל בין אזהרה שמדלגים עליה לאחת שעוצרים בגללה.
+     */
+    private fun confirmDelete(item: ItemStockStatus) {
+        viewLifecycleOwner.lifecycleScope.launch {
+            val transactions = transactionsRepository.getTransactionsForItem(item.id)
+            val batches = batchesRepository.getBatchesForItem(item.id)
+            if (_binding == null) return@launch
+
+            val txCount = (transactions as? Resource.Success)?.data?.size ?: 0
+            val batchCount = (batches as? Resource.Success)?.data?.size ?: 0
+
+            val message = if (txCount == 0 && batchCount == 0) {
+                getString(R.string.item_delete_confirm_clean, item.name)
+            } else {
+                getString(R.string.item_delete_confirm_history, item.name, txCount, batchCount)
+            }
+
+            MaterialAlertDialogBuilder(requireContext())
+                .setTitle(R.string.item_delete_title)
+                .setMessage(message)
+                .setPositiveButton(R.string.item_action_delete) { _, _ -> deleteItem(item) }
+                .setNegativeButton(R.string.cancel, null)
+                .show()
+        }
+    }
+
+    private fun deleteItem(item: ItemStockStatus) {
+        viewLifecycleOwner.lifecycleScope.launch {
+            when (val result = itemsRepository.deleteItem(item.id)) {
+                is Resource.Error -> toast(result.message)
+                is Resource.Success -> {
+                    toast(getString(R.string.item_deleted, item.name))
+                    if (_binding != null) loadItems(showSpinner = false)
+                }
+                is Resource.Loading -> Unit
+            }
+        }
+    }
+
+    private fun toast(message: String) {
+        Toast.makeText(requireContext().applicationContext, message, Toast.LENGTH_LONG).show()
     }
 
     // ======================= ניווט =======================

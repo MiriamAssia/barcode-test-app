@@ -8,6 +8,8 @@ import com.miriam.barcodetest.data.model.Item
 import com.miriam.barcodetest.data.model.ItemStockStatus
 import com.miriam.barcodetest.data.model.NewItem
 import io.github.jan.supabase.postgrest.postgrest
+import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.put
 
 class ItemsRepository {
 
@@ -104,6 +106,38 @@ class ItemsRepository {
     suspend fun getAllItems(): Resource<List<Item>> = try {
         val items = postgrest.from("items").select().decodeList<Item>()
         Resource.Success(items)
+    } catch (e: Exception) {
+        Resource.Error(mapErrorToHebrewMessage(e), e)
+    }
+
+    /**
+     * כיבוי או הפעלה מחדש של פריט (migration_03).
+     *
+     * זו הדרך המומלצת להוציא פריט משימוש: ההיסטוריה נשמרת במלואה, הפריט יורד
+     * לתחתית רשימת המלאי וממשיך להופיע בדוחות.
+     */
+    suspend fun setItemActive(itemId: String, active: Boolean): Resource<Unit> = try {
+        val params = buildJsonObject {
+            put("p_item_id", itemId)
+            put("p_active", active)
+        }
+        postgrest.rpc("set_item_active", params)
+        Resource.Success(Unit)
+    } catch (e: Exception) {
+        Resource.Error(mapErrorToHebrewMessage(e), e)
+    }
+
+    /**
+     * מחיקה בלתי הפיכה של פריט על כל האצוות והתנועות שלו (migration_03).
+     *
+     * המחיקה רצה כפונקציה ב-DB ולכן כולה טרנזקציה אחת - אין מצב ביניים שבו
+     * התנועות נמחקו והפריט נשאר. המסך שקורא לכאן אחראי לאשר מול המשתמשת
+     * לפני, כולל כמה תנועות עומדות להימחק.
+     */
+    suspend fun deleteItem(itemId: String): Resource<Unit> = try {
+        val params = buildJsonObject { put("p_item_id", itemId) }
+        postgrest.rpc("delete_item", params)
+        Resource.Success(Unit)
     } catch (e: Exception) {
         Resource.Error(mapErrorToHebrewMessage(e), e)
     }

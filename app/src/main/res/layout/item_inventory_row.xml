@@ -38,6 +38,26 @@
             android:textColor="@color/md_on_surface_variant"
             android:textSize="16sp" />
 
+        <!--
+            תגית לפריט שכובה. מוצגת רק לפריטים לא פעילים, כדי שברשימה שבה הם
+            יושבים בתחתית יהיה ברור למה הם שם ולא רק שהם אפורים יותר.
+        -->
+        <TextView
+            android:id="@+id/itemInactiveBadge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:background="@drawable/bg_status_badge"
+            android:paddingStart="12dp"
+            android:paddingTop="2dp"
+            android:paddingEnd="12dp"
+            android:paddingBottom="2dp"
+            android:text="@string/inventory_inactive_badge"
+            android:textColor="@color/md_on_surface_variant"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:visibility="gone" />
+
     </LinearLayout>
 
     <LinearLayout

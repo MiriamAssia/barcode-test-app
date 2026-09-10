@@ -269,8 +269,8 @@ class IntakeFragment : Fragment() {
         binding.quantityInput.setSelection(binding.quantityInput.text.length)
     }
 
-    private fun formatQuantity(value: Double): String =
-        if (value == value.toLong().toDouble()) value.toLong().toString() else value.toString()
+    /** פורמט אחיד לכל המסכים, כולל עיגול לדיוק של העמודה ב-DB */
+    private fun formatQuantity(value: Double): String = StockDisplay.quantity(value)
 
     // ======================= פרטי אצווה =======================
 
