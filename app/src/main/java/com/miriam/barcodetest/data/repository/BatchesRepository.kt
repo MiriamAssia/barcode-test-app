@@ -74,7 +74,20 @@ class BatchesRepository {
             existing.firstOrNull { it.batchNumber == null && it.expiryDate == expiryDate }
         }
 
-        if (match != null) {
+        // אצווה קיימת עם אותו מספר אבל תאריך תפוגה אחר - לא מצרפים בשקט.
+        // צירוף היה מבטל את התאריך שהוקלד עכשיו ומשאיר את המלאי החדש רשום
+        // תחת תפוגה שגויה; במרפאה זו בדיוק הטעות שאסור לעשות בלי לשאול.
+        val existingExpiry = match?.expiryDate
+
+        if (match != null && normalizedNumber != null &&
+            expiryDate != null && existingExpiry != null && existingExpiry != expiryDate
+        ) {
+            Resource.Error(
+                "כבר קיימת אצווה $normalizedNumber לפריט הזה, עם תאריך תפוגה " +
+                    "${asDisplayDate(existingExpiry)} במקום ${asDisplayDate(expiryDate)}. " +
+                    "בדקי את מספר האצווה או את התאריך שהוקלד."
+            )
+        } else if (match != null) {
             Resource.Success(match)
         } else {
             val created = postgrest.from("batches")
@@ -91,5 +104,16 @@ class BatchesRepository {
         }
     } catch (e: Exception) {
         Resource.Error(mapErrorToHebrewMessage(e), e)
+    }
+
+    /**
+     * תאריך מה-DB (yyyy-MM-dd) לתצוגה בעברית (dd/MM/yyyy).
+     *
+     * מכוון שזו שכבת הנתונים, לא משתמשים כאן ב-StockDisplay שיושב בשכבת
+     * התצוגה - היפוך שלושת החלקים מספיק ולא יוצר תלות הפוכה בין השכבות.
+     */
+    private fun asDisplayDate(isoDate: String): String {
+        val parts = isoDate.split("-")
+        return if (parts.size == 3) "${parts[2]}/${parts[1]}/${parts[0]}" else isoDate
     }
 }

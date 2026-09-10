@@ -111,6 +111,14 @@ class InventoryFragment : Fragment() {
             .distinct()
             .sorted()
 
+        // אם הקטגוריה שנבחרה כבר לא קיימת בנתונים (הפריט האחרון בה נמחק או
+        // שונה), חוזרים ל"כל הקטגוריות". בלי זה אף צ'יפ לא היה מסומן והרשימה
+        // הייתה מסתננת לכלום בלי שום הסבר.
+        val chosen = selectedCategory
+        if (chosen != null && chosen !in categories) {
+            selectedCategory = null
+        }
+
         views.categoryChips.removeAllViews()
         addCategoryChip(getString(R.string.inventory_category_all), null)
         categories.forEach { category -> addCategoryChip(category, category) }

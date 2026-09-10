@@ -20,7 +20,10 @@ class AlertsRepository {
      * @param expiryWarningDays כמה ימים לפני התפוגה כבר מתריעים
      */
     suspend fun getAlerts(expiryWarningDays: Long): Resource<Alerts> {
-        val statusResult = itemsRepository.getStockStatuses()
+        // כולל פריטים כבויים: אצווה שעומדת לפוג יכולה להשתייך לפריט שהוצא
+        // משימוש, וההתראה עליה עדיין רלוונטית - המלאי הפיזי קיים. בלי הפריט
+        // הכבוי כאן, הקשה על ההתראה הזו לא הייתה פותחת שום מסך.
+        val statusResult = itemsRepository.getAllStockStatuses()
         if (statusResult is Resource.Error) return statusResult
 
         val expiringResult = batchesRepository.getExpiringBatches()
@@ -31,8 +34,9 @@ class AlertsRepository {
 
         // מלאי נמוך או אזל. הסטטוס מגיע מה-view, אבל מחושב כאן שוב מהכמות
         // והסף כדי שיהיה עקבי עם מה שמוצג בשאר המסכים.
+        // פריט כבוי לא מתריע על מלאי נמוך - הפסיקו להשתמש בו בכוונה.
         val lowStock = statuses
-            .filter { it.currentQuantity <= it.minQuantity }
+            .filter { it.isActive && it.currentQuantity <= it.minQuantity }
             .sortedBy { it.currentQuantity }
 
         // אצוות שפגו כבר, או שיפוגו בתוך חלון ההתראה
@@ -53,8 +57,8 @@ class AlertsRepository {
     }
 
     /**
-     * @property allStatuses כל הפריטים, לא רק אלה שבהתראה - נדרש כדי שהקשה
-     *   על התראת תפוגה תוכל לפתוח את כרטיס הפריט המלא.
+     * @property allStatuses כל הפריטים, כולל כבויים ולא רק אלה שבהתראה -
+     *   נדרש כדי שהקשה על התראת תפוגה תוכל לפתוח את כרטיס הפריט המלא.
      */
     data class Alerts(
         val lowStock: List<ItemStockStatus>,

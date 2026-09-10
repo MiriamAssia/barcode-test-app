@@ -37,9 +37,12 @@ class ProfileRepository {
         val profiles = client.postgrest.from("profiles")
             .select()
             .decodeList<Profile>()
-        val names = profiles.associate { profile ->
-            profile.id to (profile.fullName?.takeIf { it.isNotBlank() } ?: profile.id)
-        }
+        // פרופיל בלי שם מלא פשוט לא נכנס למפה. קודם הוא מופה למזהה של עצמו,
+        // ואז המסך הציג מחרוזת UUID במקום "משתמש/ת לא ידוע/ה" - כי הנפילה
+        // לאחור שם מופעלת רק כשהמזהה חסר מהמפה לגמרי.
+        val names = profiles.mapNotNull { profile ->
+            profile.fullName?.takeIf { it.isNotBlank() }?.let { name -> profile.id to name }
+        }.toMap()
         Resource.Success(names)
     } catch (e: Exception) {
         Resource.Error(mapErrorToHebrewMessage(e), e)

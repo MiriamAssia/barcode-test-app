@@ -2,6 +2,7 @@ package com.miriam.barcodetest.data.repository
 
 import com.miriam.barcodetest.data.Resource
 import com.miriam.barcodetest.data.SupabaseClientProvider
+import com.miriam.barcodetest.data.isDuplicateKey
 import com.miriam.barcodetest.data.mapErrorToHebrewMessage
 import com.miriam.barcodetest.data.model.Item
 import com.miriam.barcodetest.data.model.ItemStockStatus
@@ -34,14 +35,44 @@ class ItemsRepository {
         Resource.Error(mapErrorToHebrewMessage(e), e)
     }
 
-    /** הוספת פריט חדש - מנהל/ת בלבד (נאכף ב-RLS, לא רק בקוד) */
+    /**
+     * סטטוס מלאי לכל הפריטים, כולל כאלה שכובו.
+     *
+     * נדרש למסך ההתראות: אצווה שעומדת לפוג יכולה להשתייך לפריט שכובה מאז,
+     * וההתראה עליה עדיין מוצגת (המלאי הפיזי קיים וצריך לטפל בו). בלי הפריטים
+     * הכבויים כאן, הקשה על התראה כזו לא הייתה פותחת כלום.
+     */
+    suspend fun getAllStockStatuses(): Resource<List<ItemStockStatus>> = try {
+        val rows = postgrest.from("item_stock_status")
+            .select()
+            .decodeList<ItemStockStatus>()
+            .sortedBy { it.name }
+        Resource.Success(rows)
+    } catch (e: Exception) {
+        Resource.Error(mapErrorToHebrewMessage(e), e)
+    }
+
+    /**
+     * הוספת פריט חדש - מנהל/ת בלבד (נאכף ב-RLS, לא רק בקוד).
+     *
+     * האינדקס הייחודי על barcode חל על כל הפריטים, גם על כבויים - ולכן ברקוד
+     * של פריט שכובה ייכשל כאן, אחרי ש-findItemByBarcode (שמסננת לפעילים) לא
+     * מצאה אותו. במקרה הזה מוחזרת הודעה שמסבירה בדיוק מה קרה, במקום שגיאת
+     * מסד נתונים גולמית.
+     */
     suspend fun addItem(newItem: NewItem): Resource<Item> = try {
         val created = postgrest.from("items")
             .insert(newItem) { select() }
             .decodeSingle<Item>()
         Resource.Success(created)
     } catch (e: Exception) {
-        Resource.Error(mapErrorToHebrewMessage(e), e)
+        val message = if (newItem.barcode != null && isDuplicateKey(e)) {
+            "הברקוד הזה כבר משויך לפריט אחר במערכת. ייתכן שהפריט כובה - " +
+                "אפשר לחפש אותו לפי שם במסך המלאי ולהפעיל אותו מחדש."
+        } else {
+            mapErrorToHebrewMessage(e)
+        }
+        Resource.Error(message, e)
     }
 
     /**

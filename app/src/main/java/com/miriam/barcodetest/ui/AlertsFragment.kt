@@ -71,10 +71,19 @@ class AlertsFragment : Fragment() {
                     val alerts = result.data
                     statusesById = alerts.allStatuses.associateBy { it.id }
                     adapter.submit(buildRows(alerts))
+                    // מחזירים את טקסט ברירת המחדל: אם קודם הוצגה כאן שגיאה,
+                    // בלי השורה הזו טעינה מוצלחת בלי התראות הייתה מציגה את
+                    // הודעת השגיאה הישנה לצד סימן הווי הירוק.
+                    current.emptyText.setText(R.string.alerts_none)
                     current.emptyState.visibility =
                         if (alerts.total == 0) View.VISIBLE else View.GONE
                 }
                 is Resource.Error -> {
+                    // מרוקנים את הרשימה לפני הצגת השגיאה: מסך ההתראות הוא
+                    // FrameLayout, ובלי זה שורות ההתראה הישנות נשארו גלויות
+                    // מאחורי הודעת השגיאה וקראו כאילו הן עדכניות.
+                    statusesById = emptyMap()
+                    adapter.submit(emptyList())
                     current.emptyText.text = result.message
                     current.emptyState.visibility = View.VISIBLE
                 }

@@ -27,6 +27,22 @@ fun mapErrorToHebrewMessage(e: Throwable): String {
             "אין לך הרשאה לבצע פעולה זו."
         msg.contains("PGRST116", true) ->
             "הפריט המבוקש לא נמצא."
+        isDuplicateKey(e) ->
+            "הערך שהוזן כבר קיים במערכת עבור פריט אחר."
         else -> "משהו השתבש: ${e.message ?: "שגיאה לא ידועה"}"
     }
+}
+
+/**
+ * האם החריגה היא הפרה של אילוץ ייחודיות ב-Postgres (קוד 23505).
+ *
+ * יש שני אינדקסים ייחודיים חלקיים בסכמה - על הברקוד של פריט ועל צירוף
+ * (item_id, batch_number) של אצווה - ובלי זיהוי מפורש המשתמשת הייתה מקבלת
+ * טקסט שגיאה גולמי של מסד הנתונים.
+ */
+fun isDuplicateKey(e: Throwable): Boolean {
+    val msg = e.message ?: return false
+    return msg.contains("23505") ||
+        msg.contains("duplicate key", true) ||
+        msg.contains("already exists", true)
 }

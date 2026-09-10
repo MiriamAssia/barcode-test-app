@@ -175,8 +175,15 @@ class ReportsFragment : Fragment() {
             val current = _binding ?: return@launch
             current.reportProgress.visibility = View.GONE
 
-            if (transactionsResult is Resource.Error) {
-                showEmpty(transactionsResult.message)
+            // כשלון בכל אחת משתי השליפות מרוקן את הדוח לפני הצגת השגיאה.
+            // בלי זה נשארו על המסך המספרים של הטווח הקודם לצד הודעת שגיאה,
+            // והחלפת הפילוח אחר כך הייתה מציגה אותם שוב בלי שום סימן לתקלה.
+            // בלי שמות הפריטים אין דוח קריא בכלל, ולכן גם הוא נחשב כשלון.
+            val failure = (transactionsResult as? Resource.Error)?.message
+                ?: (itemsResult as? Resource.Error)?.message
+            if (failure != null) {
+                clearReport()
+                showEmpty(failure)
                 return@launch
             }
 
@@ -243,6 +250,17 @@ class ReportsFragment : Fragment() {
                 )
             }
             .sortedByDescending { it.amount }
+
+    /** מרוקן את הדוח לגמרי - נתונים, אריחי הסיכום והרשימה */
+    private fun clearReport() {
+        val views = _binding ?: return
+        loadedTransactions = emptyList()
+        itemsById = emptyMap()
+        adapter.submit(emptyList())
+        views.summaryUnits.text = StockDisplay.quantity(0.0)
+        views.summaryItems.text = "0"
+        views.summaryTransactions.text = "0"
+    }
 
     private fun showEmpty(message: String) {
         val views = _binding ?: return
