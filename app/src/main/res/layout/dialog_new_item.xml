@@ -15,6 +15,18 @@
         android:paddingEnd="@dimen/md_gutter"
         android:paddingBottom="@dimen/md_unit">
 
+        <!--
+            השאלה יושבת כאן ולא ב-setMessage של הדיאלוג: הודעה ותצוגה מותאמת
+            יחד דחפו את סרגל הכפתורים אל מחוץ למסך בטופס גבוה כמו זה.
+        -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/md_margin_mobile"
+            android:text="@string/intake_create_item_question"
+            android:textAppearance="@style/TextAppearance.MedTrack.BodyMedium"
+            android:textColor="@color/md_on_surface_variant" />
+
         <!-- הברקוד שנסרק - לתצוגה בלבד -->
         <TextView
             style="@style/Widget.MedTrack.FieldLabel"

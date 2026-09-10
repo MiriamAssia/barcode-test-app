@@ -40,6 +40,7 @@
     <string name="intake_search_first">יש לסרוק ברקוד או להזין מק\"ט</string>
     <string name="intake_quantity_invalid">יש להזין כמות גדולה מאפס</string>
     <string name="intake_item_not_found">פריט לא נמצא במערכת</string>
+    <string name="intake_item_required">הפריט עדיין לא אותר. הקישי על זכוכית המגדלת כדי לחפש אותו, וצרי פריט חדש אם הוא לא קיים.</string>
     <string name="intake_create_item_question">הברקוד לא קיים במערכת. ליצור פריט חדש?</string>
     <string name="intake_create_item">יצירת פריט חדש</string>
     <string name="intake_searching">מחפש פריט...</string>

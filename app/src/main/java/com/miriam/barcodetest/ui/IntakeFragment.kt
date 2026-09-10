@@ -176,9 +176,13 @@ class IntakeFragment : Fragment() {
         val dialogBinding = DialogNewItemBinding.inflate(layoutInflater)
         dialogBinding.newItemBarcode.text = barcode
 
+        // אין כאן setMessage בכוונה. דיאלוג עם הודעה *וגם* תצוגה מותאמת מציב
+        // את שתיהן זו מתחת לזו, ובטופס גבוה כמו זה סרגל הכפתורים נדחף אל מחוץ
+        // למסך ולא היה אפשר ליצור את הפריט בכלל. השאלה עברה לתוך הטופס עצמו,
+        // וכך הדיאלוג הוא כותרת + טופס נגלל + כפתורים, והכפתורים תמיד נשארים
+        // גלויים - גם כשהמקלדת פתוחה.
         val dialog = MaterialAlertDialogBuilder(requireContext())
             .setTitle(R.string.new_item_title)
-            .setMessage(R.string.intake_create_item_question)
             .setView(dialogBinding.root)
             .setPositiveButton(R.string.new_item_create, null)
             .setNegativeButton(R.string.cancel, null)
@@ -281,7 +285,16 @@ class IntakeFragment : Fragment() {
     private fun submit() {
         val item = selectedItem
         if (item == null) {
-            showStatus(getString(R.string.intake_search_first), isError = true)
+            // שתי סיבות שונות לגמרי לאותו מצב, ולכן שתי הודעות שונות: שדה ריק
+            // מול ברקוד שהוקלד אבל הפריט מאחוריו עדיין לא אותר. קודם הוצגה כאן
+            // "יש לסרוק ברקוד" גם כשהברקוד היה על המסך מול העיניים.
+            val typed = binding.barcodeInput.text.toString().trim()
+            val message = if (typed.isEmpty()) {
+                R.string.intake_search_first
+            } else {
+                R.string.intake_item_required
+            }
+            showStatus(getString(message), isError = true)
             return
         }
 
