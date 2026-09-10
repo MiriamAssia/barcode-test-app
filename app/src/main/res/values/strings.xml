@@ -160,4 +160,15 @@
     <string name="reports_pick_from">בחר תאריך התחלה</string>
     <string name="reports_pick_to">בחר תאריך סיום</string>
 
+    <!-- מסך התחברות -->
+    <string name="login_title">ניהול מלאי רפואי</string>
+    <string name="login_subtitle">התחברות למערכת</string>
+    <string name="login_email_label">אימייל</string>
+    <string name="login_email_hint">name@example.com</string>
+    <string name="login_password_label">סיסמה</string>
+    <string name="login_password_hint">הזן סיסמה...</string>
+    <string name="login_action">התחברות</string>
+    <string name="login_missing_fields">יש למלא אימייל וסיסמה</string>
+    <string name="cd_app_logo">סמל האפליקציה</string>
+
 </resources>

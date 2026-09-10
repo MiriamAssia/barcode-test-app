@@ -3,6 +3,7 @@ package com.miriam.barcodetest
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.view.inputmethod.EditorInfo
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.miriam.barcodetest.data.Resource
@@ -28,6 +29,16 @@ class LoginActivity : AppCompatActivity() {
 
         binding.loginButton.setOnClickListener { attemptLogin() }
 
+        // "אישור" במקלדת אחרי הסיסמה מתחבר ישירות, בלי להוריד את היד למסך
+        binding.passwordInput.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                attemptLogin()
+                true
+            } else {
+                false
+            }
+        }
+
         // אם כבר יש session שמור מפעם קודמת - עוברים ישר למסך הראשי בלי
         // להציג את טופס ההתחברות בכלל.
         lifecycleScope.launch {
@@ -47,7 +58,7 @@ class LoginActivity : AppCompatActivity() {
         val password = binding.passwordInput.text.toString()
 
         if (email.isBlank() || password.isBlank()) {
-            binding.errorText.text = "יש למלא אימייל וסיסמה"
+            binding.errorText.text = getString(R.string.login_missing_fields)
             return
         }
 
