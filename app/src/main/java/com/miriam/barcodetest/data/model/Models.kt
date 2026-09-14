@@ -108,7 +108,9 @@ data class ItemStockStatus(
     @SerialName("min_quantity") val minQuantity: Double,
     @SerialName("is_active") val isActive: Boolean,
     @SerialName("current_quantity") val currentQuantity: Double,
-    val status: String // "ok" | "low" | "out"
+    val status: String, // "ok" | "low" | "out"
+    /** נוסף ל-view ב-migration_04, לטובת טופס עריכת הפריט */
+    val barcode: String? = null
 )
 
 @Serializable

@@ -1,20 +1,28 @@
 package com.miriam.barcodetest.ui
 
+import android.content.DialogInterface
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.miriam.barcodetest.R
+import com.miriam.barcodetest.data.AppSettings
 import com.miriam.barcodetest.data.Resource
 import com.miriam.barcodetest.data.model.Batch
 import com.miriam.barcodetest.data.model.InventoryTransaction
 import com.miriam.barcodetest.data.model.ItemStockStatus
+import com.miriam.barcodetest.data.model.NewTransaction
 import com.miriam.barcodetest.data.repository.BatchesRepository
 import com.miriam.barcodetest.data.repository.ProfileRepository
 import com.miriam.barcodetest.data.repository.TransactionsRepository
+import com.miriam.barcodetest.databinding.DialogAdjustBatchBinding
 import com.miriam.barcodetest.databinding.FragmentItemDetailBinding
 import com.miriam.barcodetest.databinding.ItemBatchRowBinding
 import com.miriam.barcodetest.databinding.ItemTransactionRowBinding
@@ -132,6 +140,7 @@ class ItemDetailFragment : Fragment() {
         binding.batchesEmpty.visibility = if (withStock.isEmpty()) View.VISIBLE else View.GONE
 
         val context = requireContext()
+        val warningDays = AppSettings.expiryWarningDays(context)
         withStock.forEach { batch ->
             val row = ItemBatchRowBinding.inflate(layoutInflater, container, false)
 
@@ -157,7 +166,7 @@ class ItemDetailFragment : Fragment() {
                         row.batchExpiry.text = base + " · " + getString(R.string.detail_expired)
                         row.batchExpiry.setTextColor(StockDisplay.statusColor(context, "out"))
                     }
-                    daysLeft != null && daysLeft <= StockDisplay.EXPIRY_WARNING_DAYS -> {
+                    daysLeft != null && daysLeft <= warningDays -> {
                         row.batchExpiry.text = base + " · " +
                             getString(R.string.detail_expires_soon, daysLeft.toInt())
                         row.batchExpiry.setTextColor(StockDisplay.statusColor(context, "low"))
@@ -177,8 +186,110 @@ class ItemDetailFragment : Fragment() {
                 row.batchSupplier.visibility = View.GONE
             }
 
+            row.root.setOnClickListener { showAdjustDialog(batch) }
+
             container.addView(row.root)
         }
+    }
+
+    // ======================= תיקון ספירה =======================
+
+    /**
+     * תיקון ספירת מלאי לאצווה.
+     *
+     * המשתמשת מזינה את מה שספרה בפועל; ההפרש מחושב כאן ונרשם כתנועת
+     * 'adjustment'. זו הדרך היחידה לתקן פער בין המדף למערכת: batches.quantity
+     * הוא מטמון שרק הטריגר מעדכן (יש revoke בסכמה), ולכן כל תיקון חייב לעבור
+     * דרך יומן התנועות - וכך גם נשאר תיעוד של מי תיקן ומתי.
+     */
+    private fun showAdjustDialog(batch: Batch) {
+        val dialogBinding = DialogAdjustBatchBinding.inflate(layoutInflater)
+
+        val batchLabel = batch.batchNumber?.takeIf { it.isNotBlank() }
+            ?.let { getString(R.string.detail_batch_number, it) }
+            ?: getString(R.string.detail_batch_no_number)
+        dialogBinding.adjustBatchLabel.text = batchLabel
+        dialogBinding.adjustRecorded.text = getString(
+            R.string.adjust_recorded,
+            StockDisplay.quantity(batch.quantity),
+            itemUnit
+        )
+        dialogBinding.adjustCountedInput.setText(StockDisplay.quantity(batch.quantity))
+
+        // ההפרש מתעדכן תוך כדי הקלדה, כדי שיהיה ברור מה עומד להירשם ביומן
+        fun refreshDelta() {
+            val counted = dialogBinding.adjustCountedInput.text.toString().toDoubleOrNull()
+            dialogBinding.adjustDelta.text = when {
+                counted == null || counted < 0.0 -> getString(R.string.adjust_invalid)
+                counted == batch.quantity -> getString(R.string.adjust_no_change)
+                else -> getString(
+                    R.string.adjust_delta,
+                    StockDisplay.signedQuantity("adjustment", counted - batch.quantity)
+                )
+            }
+        }
+        refreshDelta()
+        dialogBinding.adjustCountedInput.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, a: Int, b: Int, c: Int) = Unit
+            override fun onTextChanged(s: CharSequence?, a: Int, b: Int, c: Int) = Unit
+            override fun afterTextChanged(s: Editable?) = refreshDelta()
+        })
+
+        val dialog = MaterialAlertDialogBuilder(requireContext())
+            .setTitle(R.string.adjust_title)
+            .setView(dialogBinding.root)
+            .setPositiveButton(R.string.adjust_confirm, null)
+            .setNegativeButton(R.string.cancel, null)
+            .create()
+
+        dialog.setOnShowListener {
+            dialog.getButton(DialogInterface.BUTTON_POSITIVE).setOnClickListener {
+                val counted = dialogBinding.adjustCountedInput.text.toString().toDoubleOrNull()
+                if (counted == null || counted < 0.0) {
+                    toast(getString(R.string.adjust_invalid))
+                    return@setOnClickListener
+                }
+                val delta = counted - batch.quantity
+                if (delta == 0.0) {
+                    toast(getString(R.string.adjust_no_change))
+                    return@setOnClickListener
+                }
+                dialog.dismiss()
+                recordAdjustment(batch, delta)
+            }
+        }
+
+        dialog.show()
+    }
+
+    private fun recordAdjustment(batch: Batch, delta: Double) {
+        viewLifecycleOwner.lifecycleScope.launch {
+            val transaction = NewTransaction(
+                type = "adjustment",
+                itemId = itemId,
+                batchId = batch.id,
+                quantity = delta,
+                reason = getString(R.string.adjust_reason)
+            )
+            when (val result = transactionsRepository.recordTransaction(transaction)) {
+                is Resource.Success -> {
+                    toast(getString(R.string.adjust_saved))
+                    // הכמות בכותרת מגיעה מהמסך הקודם ולכן כבר לא מדויקת אחרי
+                    // התיקון. מרעננים אותה מסכום האצוות במקום להשאיר מספר ישן.
+                    itemQuantity += delta
+                    if (_binding != null) {
+                        bindHeader()
+                        loadDetails()
+                    }
+                }
+                is Resource.Error -> toast(result.message)
+                is Resource.Loading -> Unit
+            }
+        }
+    }
+
+    private fun toast(message: String) {
+        Toast.makeText(requireContext().applicationContext, message, Toast.LENGTH_LONG).show()
     }
 
     private fun renderHistory(

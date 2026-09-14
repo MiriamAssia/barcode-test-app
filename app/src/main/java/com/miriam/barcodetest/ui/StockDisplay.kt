@@ -17,12 +17,9 @@ import java.time.format.DateTimeFormatter
  */
 object StockDisplay {
 
-    /**
-     * כמה ימים לפני התפוגה כבר מתריעים. משמש גם בכרטיס הפריט וגם במסך
-     * ההתראות - שינוי כאן משנה את שניהם יחד, כדי שלא ייווצר מצב שבו מסך
-     * אחד מסמן אצווה כדחופה והשני לא.
-     */
-    const val EXPIRY_WARNING_DAYS = 30L
+    // סף התראת התפוגה עבר ל-AppSettings.expiryWarningDays() כדי שאפשר יהיה
+    // לשנות אותו ממסך ההגדרות. כל מי שצריך אותו קורא משם, כך שמסך ההתראות,
+    // המונה על הסרגל וכרטיס הפריט תמיד מסכימים על אותו ערך.
 
     private val dayMonthYear: DateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
     private val dayMonthYearTime: DateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")

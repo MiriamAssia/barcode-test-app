@@ -128,6 +128,39 @@ class ItemsRepository {
     }
 
     /**
+     * עריכת פרטי פריט קיים (migration_04).
+     *
+     * הסטטוס פעיל/כבוי לא נכלל כאן - הוא נשלט ע"י setItemActive, כדי ששתי
+     * הפעולות לא ידרסו זו את זו כשהן נעשות מאותו מסך.
+     */
+    suspend fun updateItem(
+        itemId: String,
+        name: String,
+        category: String?,
+        unit: String,
+        minQuantity: Double,
+        barcode: String?
+    ): Resource<Unit> = try {
+        val params = buildJsonObject {
+            put("p_item_id", itemId)
+            put("p_name", name)
+            put("p_category", category)
+            put("p_unit", unit)
+            put("p_min_quantity", minQuantity)
+            put("p_barcode", barcode)
+        }
+        postgrest.rpc("update_item", params)
+        Resource.Success(Unit)
+    } catch (e: Exception) {
+        val message = if (barcode != null && isDuplicateKey(e)) {
+            "הברקוד הזה כבר משויך לפריט אחר במערכת."
+        } else {
+            mapErrorToHebrewMessage(e)
+        }
+        Resource.Error(message, e)
+    }
+
+    /**
      * מחיקה בלתי הפיכה של פריט על כל האצוות והתנועות שלו (migration_03).
      *
      * המחיקה רצה כפונקציה ב-DB ולכן כולה טרנזקציה אחת - אין מצב ביניים שבו

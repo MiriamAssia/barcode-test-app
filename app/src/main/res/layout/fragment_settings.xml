@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    מסך הגדרות. נפתח מאייקון גלגל השיניים בכותרת העליונה, מעל הטאב הפעיל -
+    אותה תבנית כמו כרטיס הפריט, ולכן הסרגל התחתון נשאר במקומו.
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/md_background"
+    android:orientation="vertical">
+
+    <!-- ===================== כותרת עם חזרה ===================== -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/md_touch_target_min"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingStart="@dimen/md_unit"
+        android:paddingEnd="@dimen/md_margin_mobile">
+
+        <ImageButton
+            android:id="@+id/settingsBackButton"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/cd_back"
+            android:padding="12dp"
+            android:src="@drawable/ic_arrow_back"
+            app:tint="@color/md_on_surface" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/settings"
+            android:textAppearance="@style/TextAppearance.MedTrack.HeadlineMedium" />
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/md_outline_variant" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:clipToPadding="false"
+        android:padding="@dimen/md_margin_mobile">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- ===================== סף התראת תפוגה ===================== -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_card"
+                android:orientation="vertical"
+                android:padding="@dimen/md_margin_mobile">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/settings_expiry_title"
+                    android:textAppearance="@style/TextAppearance.MedTrack.BodyLarge"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginBottom="@dimen/md_margin_mobile"
+                    android:text="@string/settings_expiry_explain"
+                    android:textAppearance="@style/TextAppearance.MedTrack.BodyMedium"
+                    android:textColor="@color/md_on_surface_variant"
+                    android:textSize="16sp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/md_touch_target_min"
+                    android:background="@drawable/bg_input"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <ImageButton
+                        android:id="@+id/expiryMinus"
+                        android:layout_width="@dimen/md_touch_target_min"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/bg_stepper_button"
+                        android:contentDescription="@string/cd_decrease"
+                        android:padding="@dimen/md_margin_mobile"
+                        android:src="@drawable/ic_remove"
+                        app:tint="@color/md_on_surface" />
+
+                    <EditText
+                        android:id="@+id/expiryDaysInput"
+                        style="@style/Widget.MedTrack.EditText"
+                        android:gravity="center"
+                        android:importantForAutofill="no"
+                        android:inputType="number"
+                        android:selectAllOnFocus="true"
+                        android:textColor="@color/md_primary"
+                        android:textSize="24sp"
+                        android:textStyle="bold" />
+
+                    <ImageButton
+                        android:id="@+id/expiryPlus"
+                        android:layout_width="@dimen/md_touch_target_min"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/bg_stepper_button"
+                        android:contentDescription="@string/cd_increase"
+                        android:padding="@dimen/md_margin_mobile"
+                        android:src="@drawable/ic_add"
+                        app:tint="@color/md_on_surface" />
+
+                </LinearLayout>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/saveExpiryButton"
+                    style="@style/Widget.MedTrack.Button.Primary"
+                    android:layout_marginTop="@dimen/md_margin_mobile"
+                    android:text="@string/settings_save" />
+
+            </LinearLayout>
+
+            <!-- ===================== המשתמש/ת המחוברת ===================== -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/md_margin_mobile"
+                android:background="@drawable/bg_card"
+                android:orientation="vertical"
+                android:padding="@dimen/md_margin_mobile">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/settings_account_title"
+                    android:textAppearance="@style/TextAppearance.MedTrack.BodyLarge"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/settingsUserEmail"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:textAppearance="@style/TextAppearance.MedTrack.BodyMedium"
+                    android:textColor="@color/md_on_surface_variant"
+                    android:textDirection="ltr"
+                    android:textSize="16sp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/settingsLogoutButton"
+                    style="@style/Widget.MedTrack.Button.Primary"
+                    android:layout_marginTop="@dimen/md_margin_mobile"
+                    android:backgroundTint="@color/md_error"
+                    android:text="@string/logout" />
+
+            </LinearLayout>
+
+            <!-- ===================== גרסה ===================== -->
+            <TextView
+                android:id="@+id/settingsVersion"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/md_gutter"
+                android:layout_marginBottom="@dimen/md_margin_mobile"
+                android:gravity="center"
+                android:textColor="@color/md_on_surface_variant"
+                android:textDirection="ltr"
+                android:textSize="14sp" />
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</LinearLayout>

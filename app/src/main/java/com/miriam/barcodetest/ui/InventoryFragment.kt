@@ -1,5 +1,6 @@
 package com.miriam.barcodetest.ui
 
+import android.content.DialogInterface
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -18,6 +19,7 @@ import com.miriam.barcodetest.data.model.ItemStockStatus
 import com.miriam.barcodetest.data.repository.BatchesRepository
 import com.miriam.barcodetest.data.repository.ItemsRepository
 import com.miriam.barcodetest.data.repository.TransactionsRepository
+import com.miriam.barcodetest.databinding.DialogEditItemBinding
 import com.miriam.barcodetest.databinding.FragmentInventoryBinding
 import kotlinx.coroutines.launch
 
@@ -195,15 +197,94 @@ class InventoryFragment : Fragment() {
         } else {
             getString(R.string.item_action_activate)
         }
-        val actions = arrayOf(toggleLabel, getString(R.string.item_action_delete))
+        val actions = arrayOf(
+            getString(R.string.item_action_edit),
+            toggleLabel,
+            getString(R.string.item_action_delete)
+        )
 
         MaterialAlertDialogBuilder(requireContext())
             .setTitle(item.name)
             .setItems(actions) { _, which ->
-                if (which == 0) toggleActive(item) else confirmDelete(item)
+                when (which) {
+                    0 -> showEditDialog(item)
+                    1 -> toggleActive(item)
+                    else -> confirmDelete(item)
+                }
             }
             .setNegativeButton(R.string.cancel, null)
             .show()
+    }
+
+    /**
+     * עריכת פרטי פריט. עד עכשיו לא הייתה שום דרך לתקן פריט אחרי היצירה -
+     * ובפרט לא את min_quantity, שמפעיל את כל התראות המלאי הנמוך ונקבע פעם
+     * אחת בדיאלוג של פריט חדש.
+     */
+    private fun showEditDialog(item: ItemStockStatus) {
+        val dialogBinding = DialogEditItemBinding.inflate(layoutInflater)
+        dialogBinding.editItemName.setText(item.name)
+        dialogBinding.editItemCategory.setText(item.category.orEmpty())
+        dialogBinding.editItemUnit.setText(item.unit)
+        dialogBinding.editItemMinQuantity.setText(StockDisplay.quantity(item.minQuantity))
+        dialogBinding.editItemBarcode.setText(item.barcode.orEmpty())
+
+        val dialog = MaterialAlertDialogBuilder(requireContext())
+            .setTitle(R.string.item_edit_title)
+            .setView(dialogBinding.root)
+            .setPositiveButton(R.string.settings_save, null)
+            .setNegativeButton(R.string.cancel, null)
+            .create()
+
+        // מחליפים את המאזין אחרי ההצגה כדי שהדיאלוג לא ייסגר כשהוולידציה
+        // נכשלת - אותה תבנית כמו בדיאלוג יצירת פריט.
+        dialog.setOnShowListener {
+            dialog.getButton(DialogInterface.BUTTON_POSITIVE).setOnClickListener {
+                val name = dialogBinding.editItemName.text.toString().trim()
+                val minQuantity = dialogBinding.editItemMinQuantity.text.toString().toDoubleOrNull()
+
+                val error = when {
+                    name.isEmpty() -> getString(R.string.new_item_name_required)
+                    minQuantity == null || minQuantity < 0.0 ->
+                        getString(R.string.item_edit_min_invalid)
+                    else -> null
+                }
+                if (error != null) {
+                    dialogBinding.editItemError.text = error
+                    dialogBinding.editItemError.visibility = View.VISIBLE
+                    return@setOnClickListener
+                }
+                dialogBinding.editItemError.visibility = View.GONE
+
+                viewLifecycleOwner.lifecycleScope.launch {
+                    val result = itemsRepository.updateItem(
+                        itemId = item.id,
+                        name = name,
+                        category = dialogBinding.editItemCategory.text.toString().trim()
+                            .takeIf { it.isNotEmpty() },
+                        unit = dialogBinding.editItemUnit.text.toString().trim()
+                            .takeIf { it.isNotEmpty() } ?: "יחידה",
+                        minQuantity = minQuantity ?: 0.0,
+                        barcode = dialogBinding.editItemBarcode.text.toString().trim()
+                            .takeIf { it.isNotEmpty() }
+                    )
+                    when (result) {
+                        is Resource.Success -> {
+                            dialog.dismiss()
+                            toast(getString(R.string.item_edit_saved, name))
+                            if (_binding != null) loadItems(showSpinner = false)
+                        }
+                        is Resource.Error -> {
+                            dialogBinding.editItemError.text = result.message
+                            dialogBinding.editItemError.visibility = View.VISIBLE
+                        }
+                        is Resource.Loading -> Unit
+                    }
+                }
+            }
+        }
+
+        dialog.show()
     }
 
     private fun toggleActive(item: ItemStockStatus) {

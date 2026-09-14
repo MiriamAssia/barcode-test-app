@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    תיקון ספירת מלאי לאצווה אחת. נפתח מהקשה על שורת אצווה בכרטיס הפריט.
+
+    המשתמשת מזינה את מה שספרה בפועל, לא את ההפרש. ההפרש מחושב כאן ונרשם
+    כתנועת 'adjustment' - כך שהיומן ממשיך להיות המקור היחיד לכמות, ואף אחד
+    לא כותב ישירות ל-batches.quantity.
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingStart="@dimen/md_gutter"
+    android:paddingTop="@dimen/md_margin_mobile"
+    android:paddingEnd="@dimen/md_gutter"
+    android:paddingBottom="@dimen/md_unit">
+
+    <TextView
+        android:id="@+id/adjustBatchLabel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/TextAppearance.MedTrack.BodyLarge"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/adjustRecorded"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/md_unit"
+        android:layout_marginBottom="@dimen/md_margin_mobile"
+        android:textAppearance="@style/TextAppearance.MedTrack.BodyMedium"
+        android:textColor="@color/md_on_surface_variant" />
+
+    <TextView
+        style="@style/Widget.MedTrack.FieldLabel"
+        android:text="@string/adjust_counted_label" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/md_touch_target_min"
+        android:background="@drawable/bg_input"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingStart="@dimen/md_unit"
+        android:paddingEnd="@dimen/md_unit">
+
+        <EditText
+            android:id="@+id/adjustCountedInput"
+            style="@style/Widget.MedTrack.EditText"
+            android:gravity="center"
+            android:importantForAutofill="no"
+            android:inputType="numberDecimal"
+            android:selectAllOnFocus="true"
+            android:textColor="@color/md_primary"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
+    <!-- מציג את ההפרש שייווצר, כדי שהמשתמשת תראה מה עומד להירשם ביומן -->
+    <TextView
+        android:id="@+id/adjustDelta"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/md_margin_mobile"
+        android:gravity="center"
+        android:textAppearance="@style/TextAppearance.MedTrack.BodyMedium"
+        android:textColor="@color/md_on_surface_variant" />
+
+</LinearLayout>

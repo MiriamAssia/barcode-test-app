@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.miriam.barcodetest.R
+import com.miriam.barcodetest.data.AppSettings
 import com.miriam.barcodetest.data.Resource
 import com.miriam.barcodetest.data.model.ItemStockStatus
 import com.miriam.barcodetest.data.repository.AlertsRepository
@@ -62,7 +63,7 @@ class AlertsFragment : Fragment() {
         views.emptyState.visibility = View.GONE
 
         viewLifecycleOwner.lifecycleScope.launch {
-            val result = alertsRepository.getAlerts(StockDisplay.EXPIRY_WARNING_DAYS)
+            val result = alertsRepository.getAlerts(AppSettings.expiryWarningDays(requireContext()))
             val current = _binding ?: return@launch
             current.alertsProgress.visibility = View.GONE
 

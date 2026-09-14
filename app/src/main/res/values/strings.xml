@@ -55,6 +55,36 @@
     <string name="item_deleted">\"%1$s\" נמחק לצמיתות</string>
     <string name="item_deactivated">\"%1$s\" כובה ועבר לתחתית הרשימה</string>
     <string name="item_activated">\"%1$s\" הופעל מחדש</string>
+
+    <!-- עריכת פריט קיים -->
+    <string name="item_action_edit">עריכת פרטי הפריט</string>
+    <string name="item_edit_title">עריכת פריט</string>
+    <string name="item_edit_min_invalid">הכמות המינימלית חייבת להיות מספר, ולא שלילית</string>
+    <string name="item_edit_saved">\"%1$s\" עודכן</string>
+    <string name="edit_item_barcode_hint">ללא ברקוד</string>
+
+    <!-- תיקון ספירת מלאי (תנועת adjustment) -->
+    <string name="detail_batches_hint">הקישי על אצווה כדי לתקן ספירה</string>
+    <string name="adjust_title">תיקון ספירה</string>
+    <string name="adjust_confirm">רישום התיקון</string>
+    <string name="adjust_recorded">רשום במערכת: %1$s %2$s</string>
+    <string name="adjust_counted_label">כמה נספרו בפועל</string>
+    <string name="adjust_delta">ייווצר תיקון של %1$s</string>
+    <string name="adjust_no_change">הספירה זהה למה שרשום - אין מה לתקן</string>
+    <string name="adjust_invalid">יש להזין מספר שאינו שלילי</string>
+    <string name="adjust_saved">התיקון נרשם ביומן התנועות</string>
+    <string name="adjust_reason">ספירה</string>
+
+    <!-- מסך הגדרות -->
+    <string name="cd_back">חזרה</string>
+    <string name="settings_expiry_title">התראת תפוגה</string>
+    <string name="settings_expiry_explain">כמה ימים לפני תאריך התפוגה אצווה תתחיל להופיע בהתראות ובמונה שעל הסרגל התחתון.</string>
+    <string name="settings_save">שמירה</string>
+    <string name="settings_expiry_invalid">יש להזין מספר ימים בין %1$d ל-%2$d</string>
+    <string name="settings_expiry_saved">מעכשיו מתריעים %1$d ימים לפני התפוגה</string>
+    <string name="settings_account_title">המשתמש/ת המחוברת</string>
+    <string name="settings_no_user">לא מחובר/ת</string>
+    <string name="settings_version">גרסה %1$s (build %2$d)</string>
     <string name="intake_create_item_question">הברקוד לא קיים במערכת. ליצור פריט חדש?</string>
     <string name="intake_create_item">יצירת פריט חדש</string>
     <string name="intake_searching">מחפש פריט...</string>

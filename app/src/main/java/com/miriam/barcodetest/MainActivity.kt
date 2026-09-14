@@ -7,7 +7,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.lifecycleScope
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.miriam.barcodetest.data.AppSettings
 import com.miriam.barcodetest.data.Resource
 import com.miriam.barcodetest.data.repository.AlertsRepository
 import com.miriam.barcodetest.data.repository.AuthRepository
@@ -17,7 +17,7 @@ import com.miriam.barcodetest.ui.CheckoutFragment
 import com.miriam.barcodetest.ui.IntakeFragment
 import com.miriam.barcodetest.ui.InventoryFragment
 import com.miriam.barcodetest.ui.ReportsFragment
-import com.miriam.barcodetest.ui.StockDisplay
+import com.miriam.barcodetest.ui.SettingsFragment
 import io.github.jan.supabase.auth.status.SessionStatus
 import kotlinx.coroutines.launch
 
@@ -45,7 +45,7 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.settingsButton.setOnClickListener { showSettingsDialog() }
+        binding.settingsButton.setOnClickListener { openSettings() }
 
         binding.bottomNav.setOnItemSelectedListener { menuItem ->
             showTab(menuItem.itemId)
@@ -87,7 +87,7 @@ class MainActivity : AppCompatActivity() {
      */
     private fun refreshAlertsBadge() {
         lifecycleScope.launch {
-            val result = alertsRepository.getAlerts(StockDisplay.EXPIRY_WARNING_DAYS)
+            val result = alertsRepository.getAlerts(AppSettings.expiryWarningDays(this@MainActivity))
             if (result !is Resource.Success) return@launch
 
             val badge = binding.bottomNav.getOrCreateBadge(R.id.nav_alerts)
@@ -128,23 +128,17 @@ class MainActivity : AppCompatActivity() {
     }
 
     /**
-     * תפריט הגדרות זמני: מציג מי מחובר/ת ומאפשר התנתקות. מסך הגדרות מלא
-     * (ניהול פריטים והרשאות) ייבנה בשלב נפרד.
+     * מסך ההגדרות נפתח מעל הטאב הפעיל עם addToBackStack, כמו כרטיס הפריט,
+     * כדי שהסרגל התחתון יישאר במקומו והחזרה ממנו תחזיר לאותו מסך.
+     *
+     * currentTabId לא משתנה כאן בכוונה: המשתמש/ת עדיין "נמצאת" בטאב שממנו
+     * נכנסה, והקשה עליו אחרי חזרה לא אמורה לבנות אותו מחדש.
      */
-    private fun showSettingsDialog() {
-        MaterialAlertDialogBuilder(this)
-            .setTitle(R.string.settings)
-            .setMessage(authRepository.currentUserEmail() ?: "")
-            .setPositiveButton(R.string.logout) { _, _ -> logout() }
-            .setNegativeButton(R.string.cancel, null)
-            .show()
-    }
-
-    private fun logout() {
-        lifecycleScope.launch {
-            authRepository.signOut()
-            goToLogin()
-        }
+    private fun openSettings() {
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.navHostContainer, SettingsFragment())
+            .addToBackStack(null)
+            .commit()
     }
 
     private fun goToLogin() {
