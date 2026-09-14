@@ -1,6 +1,5 @@
 package com.miriam.barcodetest.ui
 
-import android.app.DatePickerDialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -110,40 +109,25 @@ class ReportsFragment : Fragment() {
     }
 
     private fun pickCustomRange() {
-        val startFrom = rangeFrom
-        DatePickerDialog(
-            requireContext(),
-            { _, year, monthZeroBased, day ->
-                val chosenFrom = LocalDate.of(year, monthZeroBased + 1, day)
-                pickRangeEnd(chosenFrom)
-            },
-            startFrom.year,
-            startFrom.monthValue - 1,
-            startFrom.dayOfMonth
-        ).show()
+        DatePickers.show(this, R.string.reports_range_from, rangeFrom) { chosenFrom ->
+            pickRangeEnd(chosenFrom)
+        }
     }
 
     private fun pickRangeEnd(from: LocalDate) {
         val startTo = if (rangeTo.isBefore(from)) from else rangeTo
-        DatePickerDialog(
-            requireContext(),
-            { _, year, monthZeroBased, day ->
-                val chosenTo = LocalDate.of(year, monthZeroBased + 1, day)
-                // אם נבחר סוף מוקדם מההתחלה, מחליפים ביניהם במקום להציג שגיאה
-                if (chosenTo.isBefore(from)) {
-                    rangeFrom = chosenTo
-                    rangeTo = from
-                } else {
-                    rangeFrom = from
-                    rangeTo = chosenTo
-                }
-                updateRangeLabel()
-                loadReport()
-            },
-            startTo.year,
-            startTo.monthValue - 1,
-            startTo.dayOfMonth
-        ).show()
+        DatePickers.show(this, R.string.reports_range_to, startTo) { chosenTo ->
+            // אם נבחר סוף מוקדם מההתחלה, מחליפים ביניהם במקום להציג שגיאה
+            if (chosenTo.isBefore(from)) {
+                rangeFrom = chosenTo
+                rangeTo = from
+            } else {
+                rangeFrom = from
+                rangeTo = chosenTo
+            }
+            updateRangeLabel()
+            loadReport()
+        }
     }
 
     private fun updateRangeLabel() {

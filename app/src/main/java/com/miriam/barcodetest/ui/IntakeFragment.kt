@@ -1,6 +1,5 @@
 package com.miriam.barcodetest.ui
 
-import android.app.DatePickerDialog
 import android.content.DialogInterface
 import android.os.Bundle
 import android.text.Editable
@@ -8,6 +7,7 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.view.inputmethod.EditorInfo
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -188,6 +188,11 @@ class IntakeFragment : Fragment() {
             .setNegativeButton(R.string.cancel, null)
             .create()
 
+        // בלי זה חלון הדיאלוג נשאר בגודלו המלא כשהמקלדת נפתחת, המקלדת פשוט
+        // מכסה את החלק התחתון של הטופס, וה-ScrollView לא יודע שנשאר לו פחות
+        // מקום - ולכן אי אפשר לגלול אל מה שהוסתר.
+        dialog.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
+
         // מחליפים את המאזין של הכפתור החיובי אחרי ההצגה, כדי שהדיאלוג לא
         // ייסגר אוטומטית כשהוולידציה נכשלת.
         dialog.setOnShowListener {
@@ -233,16 +238,10 @@ class IntakeFragment : Fragment() {
 
     private fun showDatePicker() {
         val initial = expiryDate ?: LocalDate.now().plusYears(1)
-        DatePickerDialog(
-            requireContext(),
-            { _, year, monthZeroBased, dayOfMonth ->
-                expiryDate = LocalDate.of(year, monthZeroBased + 1, dayOfMonth)
-                updateExpiryText()
-            },
-            initial.year,
-            initial.monthValue - 1,
-            initial.dayOfMonth
-        ).show()
+        DatePickers.show(this, R.string.intake_expiry_label, initial) { picked ->
+            expiryDate = picked
+            updateExpiryText()
+        }
     }
 
     private fun updateExpiryText() {

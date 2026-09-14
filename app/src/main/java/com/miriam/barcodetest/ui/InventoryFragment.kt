@@ -7,6 +7,7 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -235,6 +236,9 @@ class InventoryFragment : Fragment() {
             .setPositiveButton(R.string.settings_save, null)
             .setNegativeButton(R.string.cancel, null)
             .create()
+
+        // מאפשר לטופס להתכווץ ולהיגלל כשהמקלדת נפתחת, במקום שהיא תכסה אותו
+        dialog.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
 
         // מחליפים את המאזין אחרי ההצגה כדי שהדיאלוג לא ייסגר כשהוולידציה
         // נכשלת - אותה תבנית כמו בדיאלוג יצירת פריט.

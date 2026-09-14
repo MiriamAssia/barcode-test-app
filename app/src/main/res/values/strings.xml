@@ -194,6 +194,8 @@
     <string name="reports_range_month">החודש</string>
     <string name="reports_range_custom">טווח אחר</string>
     <string name="reports_range_label">%1$s — %2$s</string>
+    <string name="reports_range_from">מתאריך</string>
+    <string name="reports_range_to">עד תאריך</string>
     <string name="reports_group_item">לפי פריט</string>
     <string name="reports_group_category">לפי קטגוריה</string>
     <string name="reports_total_units">סך יחידות שהוצאו</string>
