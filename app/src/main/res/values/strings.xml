@@ -16,7 +16,6 @@
     <string name="cancel">ביטול</string>
     <string name="save">שמירה</string>
     <string name="ok">אישור</string>
-    <string name="coming_soon">מסך זה ייבנה בשלב הבא</string>
 
     <!-- מסך קליטת מלאי -->
     <string name="intake_title">קליטת מלאי</string>
