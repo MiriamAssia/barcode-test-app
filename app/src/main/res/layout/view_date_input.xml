@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    שלושת קטעי התאריך (יום/חודש/שנה) שמורכבים לתוך DateInputView.
+    merge כי הקונטיינר (כיוון, רקע) מגיע מה-LinearLayout שמכיל את זה בפועל.
+-->
+<merge xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <EditText
+        android:id="@+id/dateDayInput"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="2"
+        android:background="@null"
+        android:digits="0123456789"
+        android:gravity="center"
+        android:hint="dd"
+        android:importantForAutofill="no"
+        android:inputType="number"
+        android:maxLength="2"
+        android:selectAllOnFocus="true"
+        android:textColor="@color/md_on_surface"
+        android:textColorHint="@color/md_on_surface_variant"
+        android:textSize="20sp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="/"
+        android:textColor="@color/md_on_surface_variant"
+        android:textSize="20sp" />
+
+    <EditText
+        android:id="@+id/dateMonthInput"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="2"
+        android:background="@null"
+        android:digits="0123456789"
+        android:gravity="center"
+        android:hint="mm"
+        android:importantForAutofill="no"
+        android:inputType="number"
+        android:maxLength="2"
+        android:selectAllOnFocus="true"
+        android:textColor="@color/md_on_surface"
+        android:textColorHint="@color/md_on_surface_variant"
+        android:textSize="20sp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="/"
+        android:textColor="@color/md_on_surface_variant"
+        android:textSize="20sp" />
+
+    <EditText
+        android:id="@+id/dateYearInput"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="3"
+        android:background="@null"
+        android:digits="0123456789"
+        android:gravity="center"
+        android:hint="yyyy"
+        android:importantForAutofill="no"
+        android:inputType="number"
+        android:maxLength="4"
+        android:selectAllOnFocus="true"
+        android:textColor="@color/md_on_surface"
+        android:textColorHint="@color/md_on_surface_variant"
+        android:textSize="20sp" />
+
+</merge>

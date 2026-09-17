@@ -1,18 +1,22 @@
 package com.miriam.barcodetest.ui
 
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.miriam.barcodetest.R
 import com.miriam.barcodetest.data.Resource
 import com.miriam.barcodetest.data.model.InventoryTransaction
 import com.miriam.barcodetest.data.model.Item
 import com.miriam.barcodetest.data.repository.ItemsRepository
 import com.miriam.barcodetest.data.repository.TransactionsRepository
+import com.miriam.barcodetest.databinding.DialogDateRangeBinding
 import com.miriam.barcodetest.databinding.FragmentReportsBinding
 import kotlinx.coroutines.launch
 import java.time.LocalDate
@@ -109,25 +113,47 @@ class ReportsFragment : Fragment() {
     }
 
     private fun pickCustomRange() {
-        DatePickers.show(this, R.string.reports_range_from, rangeFrom) { chosenFrom ->
-            pickRangeEnd(chosenFrom)
-        }
-    }
+        val dialogBinding = DialogDateRangeBinding.inflate(layoutInflater)
+        dialogBinding.rangeFromInput.setDate(rangeFrom)
+        dialogBinding.rangeToInput.setDate(rangeTo)
 
-    private fun pickRangeEnd(from: LocalDate) {
-        val startTo = if (rangeTo.isBefore(from)) from else rangeTo
-        DatePickers.show(this, R.string.reports_range_to, startTo) { chosenTo ->
-            // אם נבחר סוף מוקדם מההתחלה, מחליפים ביניהם במקום להציג שגיאה
-            if (chosenTo.isBefore(from)) {
-                rangeFrom = chosenTo
-                rangeTo = from
-            } else {
-                rangeFrom = from
-                rangeTo = chosenTo
+        val dialog = MaterialAlertDialogBuilder(requireContext())
+            .setTitle(R.string.reports_range_custom)
+            .setView(dialogBinding.root)
+            .setPositiveButton(R.string.ok, null)
+            .setNegativeButton(R.string.cancel, null)
+            .create()
+
+        dialog.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
+
+        // מחליפים את המאזין אחרי ההצגה כדי שהדיאלוג לא ייסגר כשהוולידציה נכשלת
+        dialog.setOnShowListener {
+            dialog.getButton(DialogInterface.BUTTON_POSITIVE).setOnClickListener {
+                val from = dialogBinding.rangeFromInput.getDate()
+                val to = dialogBinding.rangeToInput.getDate()
+
+                if (from == null || to == null) {
+                    dialogBinding.dateRangeError.text = getString(R.string.reports_range_invalid)
+                    dialogBinding.dateRangeError.visibility = View.VISIBLE
+                    return@setOnClickListener
+                }
+                dialogBinding.dateRangeError.visibility = View.GONE
+
+                // אם נבחר סוף מוקדם מההתחלה, מחליפים ביניהם במקום להציג שגיאה
+                if (to.isBefore(from)) {
+                    rangeFrom = to
+                    rangeTo = from
+                } else {
+                    rangeFrom = from
+                    rangeTo = to
+                }
+                dialog.dismiss()
+                updateRangeLabel()
+                loadReport()
             }
-            updateRangeLabel()
-            loadReport()
         }
+
+        dialog.show()
     }
 
     private fun updateRangeLabel() {

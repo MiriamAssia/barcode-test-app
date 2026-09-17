@@ -27,7 +27,6 @@ import com.miriam.barcodetest.databinding.DialogNewItemBinding
 import com.miriam.barcodetest.databinding.FragmentIntakeBinding
 import kotlinx.coroutines.launch
 import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 
 /**
  * מסך קליטת מלאי.
@@ -48,10 +47,6 @@ class IntakeFragment : Fragment() {
 
     /** הפריט שזוהה. בלעדיו אי אפשר לקלוט - אין לאיזה פריט לשייך את המלאי. */
     private var selectedItem: Item? = null
-    private var expiryDate: LocalDate? = null
-
-    private val displayDateFormat: DateTimeFormatter =
-        DateTimeFormatter.ofPattern("dd/MM/yyyy")
 
     private val scanLauncher = registerForActivityResult(ScanContract()) { result ->
         val code = result.contents
@@ -97,10 +92,11 @@ class IntakeFragment : Fragment() {
             }
         })
 
-        binding.expiryField.setOnClickListener { showDatePicker() }
+        binding.expiryCalendarButton.setOnClickListener { showDatePicker() }
+        binding.expiryDateInput.onDateChanged = { updateExpiryClearVisibility() }
         binding.expiryClear.setOnClickListener {
-            expiryDate = null
-            updateExpiryText()
+            binding.expiryDateInput.clear()
+            updateExpiryClearVisibility()
         }
 
         binding.quantityMinus.setOnClickListener { changeQuantity(-1.0) }
@@ -110,7 +106,7 @@ class IntakeFragment : Fragment() {
 
         binding.submitButton.setOnClickListener { submit() }
 
-        updateExpiryText()
+        updateExpiryClearVisibility()
     }
 
     override fun onDestroyView() {
@@ -237,24 +233,18 @@ class IntakeFragment : Fragment() {
     // ======================= תאריך תפוגה =======================
 
     private fun showDatePicker() {
-        val initial = expiryDate ?: LocalDate.now().plusYears(1)
+        val initial = binding.expiryDateInput.getDate() ?: LocalDate.now().plusYears(1)
         DatePickers.show(this, R.string.intake_expiry_label, initial) { picked ->
-            expiryDate = picked
-            updateExpiryText()
+            binding.expiryDateInput.setDate(picked)
+            updateExpiryClearVisibility()
         }
     }
 
-    private fun updateExpiryText() {
-        val date = expiryDate
-        if (date == null) {
-            binding.expiryText.text = getString(R.string.intake_expiry_hint)
-            binding.expiryText.setTextColor(color(R.color.md_on_surface_variant))
-            binding.expiryClear.visibility = View.GONE
-        } else {
-            binding.expiryText.text = date.format(displayDateFormat)
-            binding.expiryText.setTextColor(color(R.color.md_on_surface))
-            binding.expiryClear.visibility = View.VISIBLE
-        }
+    /** כפתור "ביטול" ליד השדה גלוי כל עוד יש בו משהו - תאריך תקין או קלט חלקי */
+    private fun updateExpiryClearVisibility() {
+        val hasInput = binding.expiryDateInput.getDate() != null ||
+            binding.expiryDateInput.hasInvalidPartialInput()
+        binding.expiryClear.visibility = if (hasInput) View.VISIBLE else View.GONE
     }
 
     // ======================= כמות =======================
@@ -303,6 +293,11 @@ class IntakeFragment : Fragment() {
             return
         }
 
+        if (binding.expiryDateInput.hasInvalidPartialInput()) {
+            showStatus(getString(R.string.intake_expiry_invalid), isError = true)
+            return
+        }
+
         setSubmitting(true)
 
         viewLifecycleOwner.lifecycleScope.launch {
@@ -310,7 +305,8 @@ class IntakeFragment : Fragment() {
             val batchResult = batchesRepository.findOrCreateBatch(
                 itemId = item.id,
                 batchNumber = binding.batchNumberInput.text.toString(),
-                expiryDate = expiryDate?.toString(), // LocalDate.toString() = yyyy-MM-dd, בדיוק כמו date ב-Postgres
+                // LocalDate.toString() = yyyy-MM-dd, בדיוק כמו date ב-Postgres
+                expiryDate = binding.expiryDateInput.getDate()?.toString(),
                 supplier = binding.supplierInput.text.toString()
             )
 
@@ -356,7 +352,6 @@ class IntakeFragment : Fragment() {
 
     private fun resetForm() {
         selectedItem = null
-        expiryDate = null
         binding.barcodeInput.setText("")
         binding.batchNumberInput.setText("")
         binding.supplierInput.setText("")
@@ -364,7 +359,8 @@ class IntakeFragment : Fragment() {
         binding.resultStrip.visibility = View.GONE
         binding.batchDetails.visibility = View.GONE
         binding.batchChevron.rotation = 0f
-        updateExpiryText()
+        binding.expiryDateInput.clear()
+        updateExpiryClearVisibility()
     }
 
     // ======================= מצבי תצוגה =======================

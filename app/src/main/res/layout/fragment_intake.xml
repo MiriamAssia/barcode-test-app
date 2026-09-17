@@ -181,29 +181,27 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/md_touch_target_min"
                 android:background="@drawable/bg_input"
-                android:clickable="true"
-                android:focusable="true"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
                 android:paddingStart="@dimen/md_margin_mobile"
                 android:paddingEnd="@dimen/md_margin_mobile">
 
                 <ImageView
+                    android:id="@+id/expiryCalendarButton"
                     android:layout_width="@dimen/md_icon_md"
                     android:layout_height="@dimen/md_icon_md"
+                    android:clickable="true"
+                    android:focusable="true"
                     android:contentDescription="@string/cd_calendar"
                     android:src="@drawable/ic_calendar"
                     app:tint="@color/md_outline" />
 
-                <TextView
-                    android:id="@+id/expiryText"
+                <com.miriam.barcodetest.ui.DateInputView
+                    android:id="@+id/expiryDateInput"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_marginStart="12dp"
-                    android:layout_weight="1"
-                    android:text="@string/intake_expiry_hint"
-                    android:textAppearance="@style/TextAppearance.MedTrack.BodyLarge"
-                    android:textColor="@color/md_on_surface_variant" />
+                    android:layout_weight="1" />
 
                 <TextView
                     android:id="@+id/expiryClear"
